@@ -10,5 +10,12 @@ num_b = int(input('Enter value of b: '))
 num_c = int(input('Enter value of c: '))
 
 sum = int(0)
+
 if num_a != 13:
-    sum += num
+    sum += num_a
+    if num_b != 13:
+        sum += num_b
+        if num_c != 13:
+            sum += num_c
+
+print('Sum is', sum)
