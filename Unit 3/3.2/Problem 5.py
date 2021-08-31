@@ -6,5 +6,7 @@ Created on Mon Aug 30 13:30:36 2021
 """
 
 n = int(input('Enter a positive integer: '))
-for i in range (0, n, 1):
-    
+tri = 0
+for i in range (1, n+1, 1):
+    tri += i
+    print(tri)
