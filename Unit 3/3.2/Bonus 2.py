@@ -12,10 +12,4 @@ def factor_sum(insert):
             sum += i
     return sum
 
-ami_sum = 0
-for i in range (1, 10000):
-    for k in range (1, 10000):
-        if  i != k and factor_sum(i) == factor_sum(k):
-            ami_sum += k + i
-            
-print (ami_sum)
+print (factor_sum(10000))
