@@ -15,7 +15,7 @@ def factor_sum(insert):
 ami_sum = 0
 for i in range (1, 10000):
     for k in range (1, 10000):
-        if factor_sum(i) == factor_sum(k) and i != k:
+        if  i != k and factor_sum(i) == factor_sum(k):
             ami_sum += k + i
             
 print (ami_sum)
