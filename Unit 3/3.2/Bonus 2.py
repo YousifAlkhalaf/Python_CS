@@ -5,19 +5,17 @@ Created on Tue Aug 31 14:06:53 2021
 @author: Computer Science ~ B
 """
 
-def findAmicable(insert):
+def factor_sum(insert):
     sum = 0
     for i in range (1, insert, 1):
         if insert % i == 0:
-            if insert/i != i:
-                sum += i
+            sum += i
     return sum
 
-
-
-num1 = findAmicable(10000)
-num2 = findAmicable(findAmicable(10000))
-print(num1)
-print(num2)
-if findAmicable(num1) == num2 and num1 == findAmicable(num2):
-    print('CLEAR!')
+ami_sum = 0
+for i in range (1, 10000):
+    for k in range (1, 10000):
+        if factor_sum(i) == factor_sum(k) and i != k:
+            ami_sum += k + i
+            
+print (ami_sum)
