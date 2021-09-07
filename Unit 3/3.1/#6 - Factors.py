@@ -9,5 +9,7 @@ num = int(input('Enter a positive integer: '))
 i = 1
 while i <= num:
     if num % i == 0:
-        print(i, end = ', ')
+        print(i, end = '')
+        if i < num:
+            print (',', end  = ' ')
     i += 1
