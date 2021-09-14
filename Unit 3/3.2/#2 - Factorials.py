@@ -6,12 +6,10 @@ Created on Thu Aug 26 14:34:00 2021
 """
 
 num = int(input('Enter a positive integer: '))
-factorial = 0
-if num == 0:
-    print('0! is 1')
-else:
-    for i in range(num, 0, -1):
-        factorial += i
+factorial = 1
+
+for i in range(num, 0, -1):
+    factorial *= i
 
 print(f'{num}! is {factorial}')
         
