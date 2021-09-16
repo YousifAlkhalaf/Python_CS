@@ -9,4 +9,5 @@ print('Celsius  |  Fahrenheit\n----------------------')
 
 for celsius in range (0, 101, 10):
     fahrenheit = (celsius * (9/5)) + 32
+    fahrenheit = int(fahrenheit)
     print(f'    {celsius:>3}  |  {fahrenheit:>3}')

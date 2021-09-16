@@ -6,8 +6,10 @@ Created on Thu Sep  2 14:14:06 2021
 """
 
 def find_prime (num):
+    if num == 1:
+        return False
     for i in range (2, num, 1):
-        if i == 1 or num % i == 0:
+        if num == 1 or num % i == 0:
             return False
     return True
 
