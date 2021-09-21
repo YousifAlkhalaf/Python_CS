@@ -8,7 +8,7 @@ Created on Thu Sep 16 14:31:08 2021
 def calc_total(sub, tip = 20):
     return sub + (sub * (tip/100))
 
-print(round(calc_total(124.38, 15), 2))
-print(round(calc_total(124.38), 2))
-print(round(calc_total(81.59, 20), 2))
-print(round(calc_total(81.59), 2))
+print('The total is', round(calc_total(124.38, 15), 2))
+print('The total is', round(calc_total(124.38), 2))
+print('The total is', round(calc_total(81.59, 20), 2))
+print('The total is', round(calc_total(81.59), 2))

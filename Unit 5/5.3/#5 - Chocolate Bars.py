@@ -6,7 +6,13 @@ Created on Mon Sep 20 13:38:56 2021
 """
 
 def num_bars(goal, big_bars):
-    
+    if goal <= (5 * big_bars):
+        if goal < 5:
+            return goal
+        else:
+            return 0
+    else:
+        return goal - (5 * big_bars)
 
 print(num_bars(12, 2))
 print(num_bars(3, 2))
