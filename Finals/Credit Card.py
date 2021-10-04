@@ -55,10 +55,10 @@ full_digit_sum = find_digit_sum(card_num)
 odd_digit_sum = find_digit_sum(card_num, 2, 1)
 greater_than_4 = greater_than_x(every_other_digit(card_num), 4)
 
-print(full_digit_sum)
-print(odd_digit_sum)
-print(greater_than_4)
-print(every_other_digit(card_num))
+#print(full_digit_sum)
+#print(odd_digit_sum)
+#print(greater_than_4)
+#print(every_other_digit(card_num))
 
 if is_valid(full_digit_sum, odd_digit_sum, greater_than_4):
     print('The card is valid')
