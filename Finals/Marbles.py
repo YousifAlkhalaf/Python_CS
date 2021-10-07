@@ -4,8 +4,9 @@ Created on Mon Oct  4 13:08:20 2021
 
 @author: Computer Science ~ B
 """
-# Make unbeatable AI two stars
+# Make unbeatable AI two-three stars
 # Fun but pretty easy
+# Random AI one star
 
 import random
 
