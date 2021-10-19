@@ -4,6 +4,7 @@ Created on Mon Oct 18 13:08:05 2021
 
 @author: Computer Science ~ B
 """
+# Not that hard. One star... maybe two stars
 
 def find_roman(num) :
     new_num = ''
@@ -18,8 +19,7 @@ def find_roman(num) :
         new_num += 'C'
         num -= 100
         
-    new_num.replace('DCCCC', 'CM')
-    print(new_num)
+    new_num = new_num.replace('DCCCC', 'CM')
     
     if num // 50 == 1:
         new_num += 'L'
@@ -28,7 +28,7 @@ def find_roman(num) :
         new_num += 'X'
         num -= 10
     
-    new_num.replace('LXXXX', 'XC')
+    new_num = new_num.replace('LXXXX', 'XC')
     
     if num // 5 == 1:
         new_num += 'V'
@@ -37,9 +37,8 @@ def find_roman(num) :
         new_num += 'I'
         num -= 1
     
-    print(new_num)
-    new_num.replace('VIIII', 'IX')
-    new_num.replace('IIII', 'IV')
+    new_num = new_num.replace('VIIII', 'IX')
+    new_num = new_num.replace('IIII', 'IV')
     
     return new_num
     
