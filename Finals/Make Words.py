@@ -4,6 +4,7 @@ Created on Tue Oct 19 14:01:19 2021
 
 @author: Computer Science ~ B
 """
+#Quite easy. One star
 import random
 
 def randvowel(word):
@@ -64,13 +65,36 @@ def randcons(word):
     elif num == 21:
         return word + 'y'
 
+
 word = ''
-for i in range(3):
+for i in range(0, 3, 1):
     word = randvowel(word)
-for i in range(5):
+for i in range(0, 5, 1):
     word = randcons(word)
 
-stop = False
+print(word)
 
-while stop == False:
+stop = False
+counter = 0
+
+while stop == False:   
+    print('Valid words:', counter)
+    new_word = input('Enter a word with the characters provided above. Enter "X" to quit: ')
+    
+    if new_word == 'X':
+        stop = True
+        print('Goodbye!')
+    else:
+        new_word = new_word.lower()
+        is_valid = True
+        
+        for c in new_word:
+            old_count = word.count(c)
+            if new_word.count(c) > old_count:
+                is_valid = False
+                
+        if is_valid:
+            counter += 1
+        else:
+            print('Invalid word.')
     
