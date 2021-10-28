@@ -1,4 +1,6 @@
 from tkinter import *
+from PIL import ImageTk, Image
+
 root = Tk()
 root.title('Doge.com')
 root.iconbitmap('C:/Users/Computer Science ~ B/Pictures/doge.ico')
