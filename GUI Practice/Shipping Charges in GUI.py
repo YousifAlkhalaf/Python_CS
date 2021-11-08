@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import messagebox
 import tkinter as tk
 import math
 
@@ -8,10 +9,12 @@ root.iconbitmap('C:/Users/Computer Science ~ B/Pictures/doge.ico')
 root.resizable(0, 0)
 
 def clicked(value):
+    '''Sets radiobutton value to value'''
     myLabel = Label(root, text=value)
     myLabel.pack
 
 def calculate(weight, distance):
+    '''Calculates cost and outputs a label with the cost rounded to 2 decimal places'''
     if weight == 1:
         cost = 1.10 * math.ceil(distance/500)
     elif weight == 2:
@@ -20,8 +23,9 @@ def calculate(weight, distance):
         cost = 3.70 * math.ceil(distance/500)
     elif weight == 4:
         cost = 3.80 * math.ceil(distance/500)
+    cost = round(cost, 2)
     
-    output = Label(text=f'Cost is ${cost}').grid(row=4)
+    output = messagebox.showinfo('Shipping Charges', f'Cost is ${cost:.2f}')
 
 frame = LabelFrame(root, padx=10, pady=10)
 instructions = Label(frame, text='Choose the package weight and enter a distance\nto find the shipping charges.')
