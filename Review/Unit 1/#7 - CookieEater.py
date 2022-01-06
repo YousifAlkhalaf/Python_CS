@@ -9,4 +9,4 @@ def findCalories(num):
     return 300 * (num/4)
 
 num = int(input('How many cookies did you eat? '))
-print(f'You ate {findCalories(num)} calories2')
+print(f'You ate {findCalories(num)} calories')
