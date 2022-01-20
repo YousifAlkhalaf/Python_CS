@@ -4,7 +4,6 @@ Spyder Editor
 
 This is a temporary script file.
 """
-import math
 
 word = input("Enter a string with an odd number of characters: ")
 midpoint = len(word)//2

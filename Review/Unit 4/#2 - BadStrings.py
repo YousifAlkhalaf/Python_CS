@@ -6,7 +6,7 @@ Created on Tue Jan 18 13:34:26 2022
 """
 
 word = input('Enter a string: ')
-if word.find('bad') < 2:
+if word.find('bad') < 2 and word.find('bad') != -1:
     print('BAD')
 else:
     print('not BAD')
