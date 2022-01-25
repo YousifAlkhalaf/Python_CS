@@ -13,8 +13,8 @@ def caterPrice(sandwiches, salads, sodas):
     total = '{:.2f}'.format(total)
     return f'Your total is ${total}'
 
-value = caterPrice(1, 1, 1)
-print('caterPrice(1, 1, 1)')
+value = caterPrice(2, 4, 2)
+print('caterPrice(2, 4, 2)')
 print('Expected output: Your total is $11.99')
 print(f'Output: {value}\n')
 value = caterPrice(0, 0, 4)

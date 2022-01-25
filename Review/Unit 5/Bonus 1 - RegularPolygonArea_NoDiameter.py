@@ -6,18 +6,21 @@ Created on Thu Jan 20 14:04:18 2022
 """
 import math
 
-def inscribedRadius(n, s, do_round = True):
+def inscribedRadius(n, s, do_round = False):
     angle = math.radians(180/n)
     radius = s/(2 * math.tan(angle))
     if do_round:
         radius = round(radius, 1)
     return radius
 
-def regPolygonArea(n, s):
+def regPolygonArea(n, s, do_round = False):
     '''Takes number of sides and side length. Returns area.'''
     r = inscribedRadius(n, s)
     area = n * ((s * r)/(2))
-    area = '{:.1f}'.format(area)
+    if do_round:
+        area = '{:.1f}'.format(area)
+    else:
+        area = str(area)
     return area
 
 
