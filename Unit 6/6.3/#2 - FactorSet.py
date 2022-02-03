@@ -16,4 +16,3 @@ num1 = int(input('Input first number: '))
 num2 = int(input('Input second number: '))
 
 print(f'The common factors of {num1} and {num2} are {common_factors(num1, num2)}')
-    
