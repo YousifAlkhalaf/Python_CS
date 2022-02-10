@@ -6,6 +6,7 @@ Created on Tue Feb  8 14:10:19 2022
 """
 
 def flatten_list(list_2d):
+    '''Turns 2d list into 1d list'''
     new_list = []
     for var in list_2d:
         for e in var:

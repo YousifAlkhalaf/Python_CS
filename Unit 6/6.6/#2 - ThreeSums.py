@@ -6,6 +6,7 @@ Created on Tue Feb  8 13:54:58 2022
 """
 
 def find_values(tuple_list):
+    '''Returns tuple w/ sums of 1st num, 2nd num, and all nums'''
     sum1 = 0
     sum2 = 0
     sum_all = 0

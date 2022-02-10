@@ -6,6 +6,7 @@ Created on Tue Feb  8 14:33:28 2022
 """
 
 def remove_empty(list_2d):
+    '''Removes empty lists from list_2d'''
     i = 0
     while i < len(list_2d):
         if len(list_2d[i]) < 1:
