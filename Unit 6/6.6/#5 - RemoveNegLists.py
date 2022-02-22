@@ -17,4 +17,4 @@ def remove_neg_lists(list_2d):
         l += 1
     return list_2d
 
-print(remove_neg_lists([[11, 2, 3], [21, 34], [2, -3, 5], [5, -4, 3], [-2]]))
+print(remove_neg_lists([[11, 2, 3], [21, 34], [2, -3, 5], [5, -4, 3], [0]]))
