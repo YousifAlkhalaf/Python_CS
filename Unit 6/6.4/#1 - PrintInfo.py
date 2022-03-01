@@ -14,4 +14,5 @@ height = int(input('Enter height, in inches: '))
 weight = int(input('Enter your weight in pounds: '))
 
 info = (name, age, height, weight,)
-print(unpack_info(info))
+n, a, h, w = info
+print(info)
