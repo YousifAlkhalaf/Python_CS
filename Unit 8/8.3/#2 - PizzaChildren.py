@@ -25,11 +25,11 @@ class Pizza(object):
 class Personal(Pizza):
     base_price = 5.99
     
-    def __init__(self, toppings):
+    def __init__(self, toppings=[]):
         super().__init__(toppings)
-        self.price = Personal.base_price + len(toppings)
     
     def __str__(self):
+        self.price = Personal.base_price + len(self.toppings)
         out_str = super().__str__()
         out_str += '  Personal   '
         out_str += f'${self.price}'
@@ -38,11 +38,11 @@ class Personal(Pizza):
 class Medium(Pizza):
     base_price = 9.99
     
-    def __init__(self, toppings):
+    def __init__(self, toppings=[]):
         super().__init__(toppings)
-        self.price = Medium.base_price + len(toppings)
-    
+        
     def __str__(self):
+        self.price = Medium.base_price + len(self.toppings)
         out_str = super().__str__()
         out_str += '  Medium   '
         out_str += f'${self.price}'
