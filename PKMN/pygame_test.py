@@ -28,5 +28,6 @@ while not done:
                                 color = (255, 100, 0)
                         screen.fill((0, 0, 0))
                         pygame.draw.rect(screen, color, pygame.Rect(x, y, 60, 60))
+        screen.blit(jynx, (100, 100))
         frameclock.tick(60)
         pygame.display.flip()
