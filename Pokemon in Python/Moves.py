@@ -28,6 +28,13 @@ class Move(object):
     def move_effect(self):
         pass
 
+    def accuracy_check(self):
+        rng_num = random.randint(1, 100)
+        if rng_num > self.accuracy:
+            return False
+        else :
+            return True
+
 class Psychic(Move):
 
     def __init__(self):
@@ -53,3 +60,12 @@ class ConfuseRay(Move):
 
     def move_effect(self, pkmn):
         pkmn.set_status('CONFUSED')
+
+class IceBeam(Move):
+
+    def __init__(self):
+        self.name = 'Ice Beam'
+        self.category = 'SPECIAL'
+        self.type = 'ICE'
+
+class
