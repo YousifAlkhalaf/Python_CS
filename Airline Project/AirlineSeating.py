@@ -9,7 +9,7 @@ class Passenger(object):
         self.seat_class = info_list[2]
         self.position = info_list[3]
         
-        self.seat = None
+        self.seat = (0, 'Z')
     
     def __str__(self):
         if self.seat == None:
@@ -30,6 +30,22 @@ class Passenger(object):
     # Sets passenger's seat to a given seat tuple
     def set_seat(self, seat):
         self.seat = seat
+    
+    # Returns passenger's assigned seat tuple
+    def get_seat(self):
+        return self.seat
+    
+    def all_same_row(party):
+        target_row = party[0].get_seat()[0]
+        if target_row == 0:
+            return False
+        for passenger in party:
+            if passenger.get_seat()[0] != target_row:
+                return False
+        return True
+    
+    def in_proximity(party):
+        pass
 
 class Seats():
     taken_seats = []
@@ -38,7 +54,7 @@ class Seats():
     def find_row_range(seat_class):
         if seat_class == 'First':
             row_range = [i for i in range(1, 4)]
-        else:
+        elif seat_class == 'Econ':
             row_range = [i for i in range(6, 31)]
         return row_range
     
@@ -51,8 +67,28 @@ class Seats():
         else:
             return ('B', 'E')
     
+    def mark_seats_taken(seat_list):
+        for seat in seat_list:
+            Seats.taken_seats.append(seat)
+    
     def choose_seats(party):
+        now_taken_seats = []
         row_range = Seats.find_row_range(party[0].get_class())
+        for row in row_range:
+            for i in range(len(party)):
+                seat_letters = Seats.find_letter_group(party[i].get_position())
+                for letter in seat_letters:
+                    seat = (row, letter)
+                    if seat not in Seats.taken_seats and seat not in now_taken_seats:
+                        party[i].set_seat(seat)
+                        now_taken_seats.append(seat)
+                        break
+            if Passenger.all_same_row(party):
+                Seats.mark_seats_taken(now_taken_seats  )
+                return
+            else:
+                now_taken_seats.clear()
+        
         
             
 
