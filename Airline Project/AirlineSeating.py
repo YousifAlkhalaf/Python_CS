@@ -1,4 +1,5 @@
 # Yousif Alkhalaf
+import math
 
 class Passenger(object):
     
@@ -12,7 +13,7 @@ class Passenger(object):
         self.seat = (0, 'Z')
     
     def __str__(self):
-        if self.seat == None:
+        if self.seat == (0, 'Z'):
             return f'{self.fn} {self.ln}: No seat assigned'
         return f'{self.fn} {self.ln}: Seat {self.seat[0]}{self.seat[1]}'
     
@@ -35,8 +36,14 @@ class Passenger(object):
     def get_seat(self):
         return self.seat
     
+    def get_seat_row(self):
+        return self.seat[0]
+    
+    def get_seat_letter(self):
+        return self.seat[1]
+    
     def all_same_row(party):
-        target_row = party[0].get_seat()[0]
+        target_row = party[0].get_seat_row()
         if target_row == 0:
             return False
         for passenger in party:
@@ -44,8 +51,14 @@ class Passenger(object):
                 return False
         return True
     
-    def in_proximity(party):
-        pass
+    def make_proximate(party):
+        max_distance = len(party) - 1
+        for passenger in party:
+            letter = passenger.get_seat_letter().unicode()
+            for passenger in party:
+                other_letter = passenger.get_seat_letter().unicode()
+                if math.abs(letter - other_letter) > max_distance:
+                    pass
 
 class Seats():
     taken_seats = []
@@ -70,6 +83,14 @@ class Seats():
     def mark_seats_taken(seat_list):
         for seat in seat_list:
             Seats.taken_seats.append(seat)
+    
+    def swap_seat_letter(passenger):
+        
+        if passenger.get_seat_letter == 'A':
+            new_letter = 'F'
+        prospect_seat = (passenger.get_seat_row(), 'F')
+        if prospect_seat not in Seats.taken_seats:
+            passenger.set_seat(prospect_seat)
     
     def choose_seats(party):
         now_taken_seats = []
