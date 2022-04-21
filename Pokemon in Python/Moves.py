@@ -1,5 +1,6 @@
 import random
 
+
 class Move(object):
 
     def __init__(self):
@@ -14,58 +15,120 @@ class Move(object):
 
     def calc_damage(self, attacker, defender, multiplier):
         rng_pwr = random.uniform(0.8, 1.0)
-        lvl_num = (2 * attacker.get_lvl())/5 + 2
+        lvl_num = (2 * attacker.get_lvl()) / 5 + 2
         if self.category == 'STATUS':
             return 0
         elif self.category == 'SPECIAL':
-            atk_def_num = attacker.get_sp_atk()/defender.get_sp_def()
+            atk_def_num = attacker.get_sp_atk() / defender.get_sp_def()
         elif self.category == 'PHYSICAL':
-            atk_def_num = attacker.get_atk()/defender.get_def()
-        dmg = (lvl_num * self.base_pwr * atk_def_num)/50 + 2
+            atk_def_num = attacker.get_atk() / defender.get_def()
+        dmg = (lvl_num * self.base_pwr * atk_def_num) / 50 + 2
         dmg *= rng_pwr * multiplier
         return dmg
 
-    def move_effect(self):
+    def self_effect(self, target):
+        pass
+
+    def foe_effect(self, target):
         pass
 
     def accuracy_check(self):
         rng_num = random.randint(1, 100)
         if rng_num > self.accuracy:
             return False
-        else :
+        else:
             return True
 
-class Psychic(Move):
+
+class SpecialMove(Move):
+
+    def __init__(self):
+        self.category = 'SPECIAL'
+
+
+class PhysicalMove(Move):
+
+    def __init__(self):
+        self.category = 'PHYSICAL'
+
+
+class StatusMove(Move):
+
+    def __init__(self):
+        self.category = 'STATUS'
+
+
+class ConfuseRay(StatusMove):
+
+    def __init__(self):
+        self.name = 'Confuse Ray'
+        self.type = 'GHOST'
+
+    def foe_effect(self, target):
+        target.set_status('CONFUSED')
+
+
+class EnergyBall(SpecialMove):
+
+    def __init__(self):
+        self.base_pwr = 90
+        self.name = 'Energy Ball'
+        self.type = 'GRASS'
+
+
+class Flamethrower(SpecialMove):
+
+    def __init__(self):
+        self.name = 'Flamethrower'
+        self.type = 'FIRE'
+
+
+class IceBeam(SpecialMove):
+
+    def __init__(self):
+        self.name = 'Ice Beam'
+        self.type = 'ICE'
+
+
+class PoisonPowder(StatusMove):
+    def __init__(self):
+        self.name = 'Poison Powder'
+        self.type = 'POISON'
+        self.accuracy = 75
+
+    def foe_effect(self, target):
+        target.set_status('POISONED')
+
+
+class Psychic(SpecialMove):
 
     def __init__(self):
         self.base_pwr = 90
         self.name = 'Psychic'
-        self.category = 'SPECIAL'
         self.type = 'PSYCHIC'
 
-class Surf(Move):
+
+class Rest(StatusMove):
+
+    def __init__(self):
+        self.name = 'Rest'
+        self.type = 'PSYCHIC'
+
+    def self_effect(self, target):
+        target.set_hp(target.get_max_hp())
+        target.set_status('SLEEP')
+
+
+class SludgeBomb(SpecialMove):
+    def __init__(self):
+        self.base_pwr = 90
+        self.name = 'Sludge Bomb'
+        self.type = 'POISON'
+
+
+class Surf(SpecialMove):
 
     def __init__(self):
         self.base_pwr = 90
         self.name = 'Surf'
-        self.category = 'SPECIAL'
         self.type = 'WATER'
-
-class ConfuseRay(Move):
-
-    def __init__(self):
-        self.name = 'Confuse Ray'
-        self.category = 'STATUS'
-        self.type = 'GHOST'
-
-    def move_effect(self, pkmn):
-        pkmn.set_status('CONFUSED')
-
-class IceBeam(Move):
-
-    def __init__(self):
-        self.name = 'Ice Beam'
-        self.category = 'SPECIAL'
-        self.type = 'ICE'
-
-class
