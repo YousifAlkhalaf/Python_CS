@@ -38,6 +38,9 @@ class Move(object):
             return False
         else:
             return True
+    
+    def get_type(self):
+        return self.type
 
 
 class SpecialMove(Move):

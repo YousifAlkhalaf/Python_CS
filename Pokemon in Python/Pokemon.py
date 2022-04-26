@@ -113,5 +113,38 @@ class Venusaur(Pokemon):
 
         self.types = ('GRASS', 'POISON')
 
+class Garchomp(Pokemon):
+    
+    def __init__(self, moveset, lvl=100):
+        super().__init__(moveset, lvl)
+        self.status = 'OK'
+
+        self.max_hp = self.calc_hp(108, lvl)
+        self.hp = self.max_hp
+        self.attack = self.calc_stat(130, lvl)
+        self.defense = self.calc_stat(95, lvl)
+        self.sp_atk = self.calc_stat(80, lvl)
+        self.sp_def = self.calc_stat(85, lvl)
+        self.speed = self.calc_stat(102, lvl)
+
+        self.types = ('DRAGON', 'GROUND')
+
+class Jynx(Pokemon):
+    
+    def __init__(self, moveset, lvl=100):
+        super().__init__(moveset, lvl)
+        self.status = 'OK'
+        
+        self.max_hp = self.calc_hp(65, lvl)
+        self.hp = self.max_hp
+        self.attack = self.calc_stat(50, lvl)
+        self.defense = self.calc_stat(35, lvl)
+        self.sp_atk = self.calc_stat(115, lvl)
+        self.sp_def = self.calc_stat(95, lvl)
+        self.speed = self.calc_stat(95, lvl)
+
+        self.types = ('ICE', 'PSYCHIC')
+        
+
 
 print(Starmie([Moves.IceBeam(), Moves.Psychic(), Moves.ConfuseRay(), Moves.Surf()]))
