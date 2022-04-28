@@ -3,6 +3,8 @@ import Moves
 
 # Type = attacking type
 normal_type = {'ROCK': 0.5, 'STEEL': 0.5, 'GHOST': 0}
+fighting_type = {'NORMAL': 2, 'FLYING': 0.5, 'POISON': 0.5, 'ROCK': 2, 'BUG': 0.5, 'GHOST': 0, 'STEEL': 2, 'PSYCHIC': 0.5, 'ICE': 2, 'DARK': 2, 'FAIRY': 0.5}
+poison_type = {'POISON': 0.5, 'GROUND': 0.5, 'ROCK': 0.5, 'GHOST': 0.5, 'STEEL': 0, 'GRASS': 2, 'ELECTRIC': 0.5}
 fire_type = {'WATER': 0.5, 'GRASS': 2, 'FIRE': 0.5, 'ROCK': 0.5, 'BUG': 2, 'STEEL': 2, 'ICE': 2, 'DRAGON': 0.5}
 water_type = {'GROUND': 2, 'ROCK': 2, 'FIRE': 2, 'GRASS': 0.5, 'WATER': 0.5, 'DRAGON': 0.5}
 grass_type = {'FLYING': 0.5, 'POISON': 0.5, 'ROCK': 2, 'GROUND': 2, 'BUG': 0.5, 'STEEL': 0.5, 'FIRE': 0.5, 'WATER': 2,
@@ -10,7 +12,7 @@ grass_type = {'FLYING': 0.5, 'POISON': 0.5, 'ROCK': 2, 'GROUND': 2, 'BUG': 0.5, 
 electric_type = {'FLYING': 2, 'GROUND': 0, 'WATER': 2, 'GRASS': 0.5, 'ELECTRIC': 0.5, 'DRAGON': 0.5}
 psychic_type = {'POISON': 2, 'FIGHTING': 2, 'STEEL': 0.5, 'PSYCHIC': 0.5, 'DARK': 0}
 
-type_matchups = {'NORMAL': normal_type, 'FIRE': fire_type, 'WATER': water_type, 'GRASS': grass_type,
+type_map = {'NORMAL': normal_type, 'FIGHTING': fighting_type, 'FIRE': fire_type, 'WATER': water_type, 'GRASS': grass_type,
                  'PSYCHIC': psychic_type, 'ELECTRIC': electric_type}
 
 
@@ -19,6 +21,7 @@ class Pokemon(object):
     def __init__(self, moveset, lvl=100):
         self.moveset = moveset
         self.lvl = lvl
+        self.status = 'OK'
         pass
 
     def __str__(self):
@@ -61,7 +64,7 @@ class Pokemon(object):
     # Finds type effectiveness multiplier based on move type.
     def calc_type_effectiveness(self, move_type):
         multiplier = 1
-        atk_type = type_matchups[move_type]
+        atk_type = type_map[move_type]
 
         for type in self.types:
             if type in atk_type:
@@ -78,13 +81,75 @@ class Pokemon(object):
             self.hp = 0
         else:
             self.hp = val
+            
 
+class Garchomp(Pokemon):
+    
+    def __init__(self, moveset, lvl=100):
+        super().__init__(moveset, lvl)
 
+        self.max_hp = self.calc_hp(108, lvl)
+        self.hp = self.max_hp
+        self.attack = self.calc_stat(130, lvl)
+        self.defense = self.calc_stat(95, lvl)
+        self.sp_atk = self.calc_stat(80, lvl)
+        self.sp_def = self.calc_stat(85, lvl)
+        self.speed = self.calc_stat(102, lvl)
+
+        self.types = ('DRAGON', 'GROUND')
+
+class Jynx(Pokemon):
+    
+    def __init__(self, moveset, lvl=100):
+        super().__init__(moveset, lvl)
+        
+        self.max_hp = self.calc_hp(65, lvl)
+        self.hp = self.max_hp
+        self.attack = self.calc_stat(50, lvl)
+        self.defense = self.calc_stat(35, lvl)
+        self.sp_atk = self.calc_stat(115, lvl)
+        self.sp_def = self.calc_stat(95, lvl)
+        self.speed = self.calc_stat(95, lvl)
+
+        self.types = ('ICE', 'PSYCHIC')
+        
+
+class Scrafty(Pokemon):
+    
+    def __init__(self, moveset, lvl=100):
+        super().__init__(moveset, lvl)
+        
+        self.max_hp = self.calc_hp(65, lvl)
+        self.hp = self.max_hp
+        self.attack = self.calc_stat(90, lvl)
+        self.defense = self.calc_stat(115, lvl)
+        self.sp_atk = self.calc_stat(45, lvl)
+        self.sp_def = self.calc_stat(115, lvl)
+        self.speed = self.calc_stat(58, lvl)
+        
+        self.types = ('DARK', 'FIGHTING')
+        
+
+class Snorlax(Pokemon):
+    
+    def __init__(self, moveset, lvl=100):
+        super().__init__(moveset, lvl)
+        
+        self.max_hp = self.calc_hp(160, lvl)
+        self.hp = self.max_hp
+        self.attack = self.calc_stat(110, lvl)
+        self.defense = self.calc_stat(65, lvl)
+        self.sp_atk = self.calc_stat(65, lvl)
+        self.sp_def = self.calc_stat(110, lvl)
+        self.speed = self.calc_stat(30, lvl)
+        
+        self.types = ('NORMAL')
+        
+        
 class Starmie(Pokemon):
 
     def __init__(self, moveset, lvl=100):
         super().__init__(moveset, lvl)
-        self.status = 'OK'
 
         self.max_hp = self.calc_hp(60, lvl)
         self.hp = self.max_hp
@@ -101,7 +166,6 @@ class Venusaur(Pokemon):
 
     def __init__(self, moveset, lvl=100):
         super().__init__(moveset, lvl)
-        self.status = 'OK'
 
         self.max_hp = self.calc_hp(80, lvl)
         self.hp = self.max_hp
@@ -112,39 +176,5 @@ class Venusaur(Pokemon):
         self.speed = self.calc_stat(80, lvl)
 
         self.types = ('GRASS', 'POISON')
-
-class Garchomp(Pokemon):
-    
-    def __init__(self, moveset, lvl=100):
-        super().__init__(moveset, lvl)
-        self.status = 'OK'
-
-        self.max_hp = self.calc_hp(108, lvl)
-        self.hp = self.max_hp
-        self.attack = self.calc_stat(130, lvl)
-        self.defense = self.calc_stat(95, lvl)
-        self.sp_atk = self.calc_stat(80, lvl)
-        self.sp_def = self.calc_stat(85, lvl)
-        self.speed = self.calc_stat(102, lvl)
-
-        self.types = ('DRAGON', 'GROUND')
-
-class Jynx(Pokemon):
-    
-    def __init__(self, moveset, lvl=100):
-        super().__init__(moveset, lvl)
-        self.status = 'OK'
-        
-        self.max_hp = self.calc_hp(65, lvl)
-        self.hp = self.max_hp
-        self.attack = self.calc_stat(50, lvl)
-        self.defense = self.calc_stat(35, lvl)
-        self.sp_atk = self.calc_stat(115, lvl)
-        self.sp_def = self.calc_stat(95, lvl)
-        self.speed = self.calc_stat(95, lvl)
-
-        self.types = ('ICE', 'PSYCHIC')
         
 
-
-print(Starmie([Moves.IceBeam(), Moves.Psychic(), Moves.ConfuseRay(), Moves.Surf()]))

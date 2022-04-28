@@ -111,6 +111,16 @@ class Psychic(SpecialMove):
         self.type = 'PSYCHIC'
 
 
+class Recover(StatusMove):
+    
+    def __init__(self):
+        self.name = 'Recover'
+        self.type = 'Normal'
+
+    def self_effect(self, target):
+        target.set_hp(target.get_max_hp()/2)
+        
+    
 class Rest(StatusMove):
 
     def __init__(self):
