@@ -25,7 +25,10 @@ class Pokemon(object):
         pass
 
     def __str__(self):
-        return str(self.moveset)
+        out_str = self.name
+        out_str += "\n\t" + self.types[0]
+        out_str += "\n\t" + self.types[1]
+        return out_str
 
     def get_lvl(self):
         return self.lvl
@@ -50,6 +53,9 @@ class Pokemon(object):
 
     def get_spd(self):
         return self.speed
+    
+    def get_status(self):
+        return self.status
 
     # Calculates HP stat of Pokemon
     def calc_hp(self, base_stat, level):
@@ -87,7 +93,8 @@ class Garchomp(Pokemon):
     
     def __init__(self, moveset, lvl=100):
         super().__init__(moveset, lvl)
-
+        self.name = 'Garchomp'
+        
         self.max_hp = self.calc_hp(108, lvl)
         self.hp = self.max_hp
         self.attack = self.calc_stat(130, lvl)
@@ -102,6 +109,7 @@ class Jynx(Pokemon):
     
     def __init__(self, moveset, lvl=100):
         super().__init__(moveset, lvl)
+        self.name = 'Jynx'
         
         self.max_hp = self.calc_hp(65, lvl)
         self.hp = self.max_hp
@@ -118,6 +126,7 @@ class Scrafty(Pokemon):
     
     def __init__(self, moveset, lvl=100):
         super().__init__(moveset, lvl)
+        self.name = 'Scrafty'
         
         self.max_hp = self.calc_hp(65, lvl)
         self.hp = self.max_hp
@@ -134,6 +143,7 @@ class Snorlax(Pokemon):
     
     def __init__(self, moveset, lvl=100):
         super().__init__(moveset, lvl)
+        self.name = 'Snorlax'
         
         self.max_hp = self.calc_hp(160, lvl)
         self.hp = self.max_hp
@@ -150,6 +160,7 @@ class Starmie(Pokemon):
 
     def __init__(self, moveset, lvl=100):
         super().__init__(moveset, lvl)
+        self.name = 'Starmie'
 
         self.max_hp = self.calc_hp(60, lvl)
         self.hp = self.max_hp
@@ -166,6 +177,7 @@ class Venusaur(Pokemon):
 
     def __init__(self, moveset, lvl=100):
         super().__init__(moveset, lvl)
+        self.name = 'Venusaur'
 
         self.max_hp = self.calc_hp(80, lvl)
         self.hp = self.max_hp
@@ -176,5 +188,5 @@ class Venusaur(Pokemon):
         self.speed = self.calc_stat(80, lvl)
 
         self.types = ('GRASS', 'POISON')
-        
 
+print('Pokemon loaded!')

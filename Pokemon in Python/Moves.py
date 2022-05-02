@@ -84,6 +84,7 @@ class Flamethrower(SpecialMove):
     def __init__(self):
         self.name = 'Flamethrower'
         self.type = 'FIRE'
+        self.base_pwr = 90
 
 
 class IceBeam(SpecialMove):
@@ -91,8 +92,20 @@ class IceBeam(SpecialMove):
     def __init__(self):
         self.name = 'Ice Beam'
         self.type = 'ICE'
+        self.base_pw = 90
 
 
+class LovelyKiss(StatusMove):
+    
+    def __init__(self):
+        self.name = 'Lovely Kiss'
+        self.type = 'ICE'
+        self.accuracy = 75
+    
+    def foe_effect(self, target):
+        target.set_status('SLEEP')
+        
+        
 class PoisonPowder(StatusMove):
     def __init__(self):
         self.name = 'Poison Powder'
@@ -132,7 +145,16 @@ class Rest(StatusMove):
         target.set_status('SLEEP')
 
 
+class ShadowBall(SpecialMove):
+    
+    def __init__(self):
+        self.base_pwr = 90
+        self.name = 'Shadow Ball'
+        self.type = 'GHOST'
+        
+    
 class SludgeBomb(SpecialMove):
+    
     def __init__(self):
         self.base_pwr = 90
         self.name = 'Sludge Bomb'
@@ -145,3 +167,5 @@ class Surf(SpecialMove):
         self.base_pwr = 90
         self.name = 'Surf'
         self.type = 'WATER'
+
+print('Moves loaded!')
