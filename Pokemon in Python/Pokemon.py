@@ -29,6 +29,9 @@ class Pokemon(object):
         out_str += "\n\t" + self.types[0]
         out_str += "\n\t" + self.types[1]
         return out_str
+    
+    def get_name(self):
+        return self.name
 
     def get_lvl(self):
         return self.lvl
