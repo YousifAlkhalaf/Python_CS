@@ -8,10 +8,27 @@ class Move(object):
         pass
 
     def __str__(self):
-        return self.name
+        out_str = self.name
+        out_str += '\n\t' + self.type
+        out_str += '\n\t' + self.category
+        if type(self) != 'StatusMove':
+            out_str += '\n\t' + self.base_pwr
+        return out_str
 
     def __repr__(self):
         return self.__str__()
+
+    def get_type(self):
+        return self.type
+    
+    def get_name(self):
+        return self.name
+    
+    def get_category(self):
+        return self.category
+    
+    def get_base_pwr(self):
+        return self.base_pwr
 
     def calc_damage(self, attacker, defender, multiplier):
         rng_pwr = random.uniform(0.8, 1.0)
@@ -38,9 +55,6 @@ class Move(object):
             return False
         else:
             return True
-    
-    def get_type(self):
-        return self.type
 
 
 class SpecialMove(Move):
@@ -59,6 +73,7 @@ class StatusMove(Move):
 
     def __init__(self):
         self.category = 'STATUS'
+        self.base_pwr = 0
 
 
 class ConfuseRay(StatusMove):

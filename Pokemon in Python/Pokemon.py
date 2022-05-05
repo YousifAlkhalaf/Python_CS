@@ -1,5 +1,7 @@
 import math
+import random
 import Moves
+
 
 # Type = attacking type
 normal_type = {'ROCK': 0.5, 'STEEL': 0.5, 'GHOST': 0}
@@ -22,6 +24,7 @@ class Pokemon(object):
         self.moveset = moveset
         self.lvl = lvl
         self.status = 'OK'
+        self.status_ctr = -1
         pass
 
     def __str__(self):
@@ -59,6 +62,9 @@ class Pokemon(object):
     
     def get_status(self):
         return self.status
+    
+    def get_moves(self):
+        return self.moveset
 
     # Calculates HP stat of Pokemon
     def calc_hp(self, base_stat, level):
@@ -79,6 +85,9 @@ class Pokemon(object):
             if type in atk_type:
                 multiplier *= atk_type[type]
         return multiplier
+    
+    def faster_than(self, other):
+        return self.get_spd() >= other.get_spd()
 
     def set_status(self, status):
         self.status = status
@@ -90,6 +99,33 @@ class Pokemon(object):
             self.hp = 0
         else:
             self.hp = val
+    
+    # Sleep status logic. Pokemon is asleep and unable to act for 1-3 turns, then wakes up and can act again
+    def sleep(self):
+        if self.status == 'SLEEP':
+            if self.status_ctr == 0:
+                self.status = 'OK'
+                self.status_ctr = -1
+                print(f'{self.name} has woken up!')
+                return False
+            elif self.status_ctr == -1:
+                self.status_ctr == random.randint(1, 3)
+            print(f'{self.name} is asleep!')
+            self.status_ctr -= 1
+            return True
+        else:
+            return False
+    
+    # Paralysis status logic. Pokemon is paralyzed, has 1 in 4 chance of not being able to use a move.
+    def paralysis(self):
+        if self.status == 'PARALYZED':
+            randnum = random.randint(1, 4)
+            if randnum == 1:
+                print('{self.name} is paralyzed! It can\'t move!')
+                return True
+            return False
+        else:
+            return False
             
 
 class Garchomp(Pokemon):
