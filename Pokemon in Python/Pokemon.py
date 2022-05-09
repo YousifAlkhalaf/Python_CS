@@ -28,7 +28,8 @@ class Pokemon(object):
         pass
 
     def __str__(self):
-        out_str = self.name
+        out_str = self.name + f'\t{self.hp}/{self.max_hp}'
+        out_str += "\n\t" + self.status
         out_str += "\n\t" + self.types[0]
         out_str += "\n\t" + self.types[1]
         return out_str
@@ -76,6 +77,7 @@ class Pokemon(object):
         stat = ((2 * base_stat) * level) / 100 + 5
         return math.ceil(stat)
 
+    # For defending Pokemon
     # Finds type effectiveness multiplier based on move type.
     def calc_type_effectiveness(self, move_type):
         multiplier = 1
@@ -100,6 +102,9 @@ class Pokemon(object):
         else:
             self.hp = val
     
+    def lose_hp(self, val):
+        self.set_hp(self.hp - val)
+    
     # Sleep status logic. Pokemon is asleep and unable to act for 1-3 turns, then wakes up and can act again
     def sleep(self):
         if self.status == 'SLEEP':
@@ -116,7 +121,7 @@ class Pokemon(object):
         else:
             return False
     
-    # Paralysis status logic. Pokemon is paralyzed, has 1 in 4 chance of not being able to use a move.
+    # Paralysis status logic. Pokemon is paralyzed, has 1 in 4 chance of not being able to use a move
     def paralysis(self):
         if self.status == 'PARALYZED':
             randnum = random.randint(1, 4)
@@ -126,6 +131,13 @@ class Pokemon(object):
             return False
         else:
             return False
+    
+    # Poison status logic. Pokemon is poisoned, loses 1/16 of max HP
+    def poison(self):
+        if self.status == 'POISONED':
+            print(f'{self.name} is poisoned! It lost HP!')
+            self.lose_hp(self.max_hp/16)
+            
             
 
 class Garchomp(Pokemon):

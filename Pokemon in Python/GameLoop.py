@@ -33,7 +33,6 @@ class Player(object):
         out_str = ''
         for i in range(len(party)):
             out_str = f"{i + 1}.\t{party[i].__str__()}\n"
-            print(out_str)
         
         num = -1
         while num not in range (1, len(party)):
@@ -81,6 +80,8 @@ def game_loop(player1, player2):
     pkmn1 = player1.get_out_pokemon()
     pkmn2 = player2.get_out_pokemon()
     print(pkmn1.get_name() + ' VS ' + pkmn2.get_name())
+    #print('\n' + pkmn1)
+    #print('\n' + pkmn2)
     
     print('Player 1\'s turn!')
     main_menu(player1, p1_pkmn_num)
@@ -89,16 +90,38 @@ def game_loop(player1, player2):
     
     if pkmn1.faster_than(pkmn2):
         move_run(player1, player2)
+        move_run(player2, player1)
+    else:
+        move_run(player2, player1)
+        move_run(player1, player2)
+    
+    pkmn1.poison()
+    pkmn2.poison()  
 
 def move_run(attacker, defender):
-    attacking_pkmn = attacker.get_out_pokemon()
-    defending_pkmn = defender.get_out.pokemon()
-    move = attacking_pkmn.get_moves()[attacker.move_num]
-    
-    if move.accuracy_check():
-        pass
-    else:
-        print(f'{attacking_pkmn.get_name()} missed!')
+    if not attacker.paralysis() and not attacker.sleep():
+        attacking_pkmn = attacker.get_out_pokemon()
+        defending_pkmn = defender.get_out.pokemon()
+        
+        move = attacking_pkmn.get_moves()[attacker.move_num]
+        multiplier = defending_pkmn.calc_type_effectiveness(move.get_type())
+        print(f'{attacking_pkmn.get_name()} uses {move.get_name()}!')
+        if multiplier > 1:
+            print('It\'s super effective!')
+        elif multiplier == 0:
+            print('It had no effect!')
+        elif multiplier < 1:
+            print('It\'s not very effective!')
+        
+        if move.accuracy_check():
+            damage = move.calc_damage(attacking_pkmn, defending_pkmn, multiplier)
+            defending_pkmn.lose_hp(damage)
+            
+            if multiplier != 0:
+                move.self_effect(attacking_pkmn())
+                move.foe_effect(defending_pkmn())
+        else:
+            print(f'{attacking_pkmn.get_name()} missed!')
     
     
         
