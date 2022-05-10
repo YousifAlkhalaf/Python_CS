@@ -2,20 +2,28 @@ import math
 import random
 import Moves
 
-
 # Type = attacking type
 normal_type = {'ROCK': 0.5, 'STEEL': 0.5, 'GHOST': 0}
-fighting_type = {'NORMAL': 2, 'FLYING': 0.5, 'POISON': 0.5, 'ROCK': 2, 'BUG': 0.5, 'GHOST': 0, 'STEEL': 2, 'PSYCHIC': 0.5, 'ICE': 2, 'DARK': 2, 'FAIRY': 0.5}
-poison_type = {'POISON': 0.5, 'GROUND': 0.5, 'ROCK': 0.5, 'GHOST': 0.5, 'STEEL': 0, 'GRASS': 2, 'ELECTRIC': 0.5}
-fire_type = {'WATER': 0.5, 'GRASS': 2, 'FIRE': 0.5, 'ROCK': 0.5, 'BUG': 2, 'STEEL': 2, 'ICE': 2, 'DRAGON': 0.5}
-water_type = {'GROUND': 2, 'ROCK': 2, 'FIRE': 2, 'GRASS': 0.5, 'WATER': 0.5, 'DRAGON': 0.5}
+fighting_type = {'NORMAL': 2, 'FLYING': 0.5, 'POISON': 0.5, 'ROCK': 2, 'BUG': 0.5,
+                 'GHOST': 0, 'STEEL': 2, 'PSYCHIC': 0.5, 'ICE': 2, 'DARK': 2, 'FAIRY': 0.5}
+poison_type = {'POISON': 0.5, 'GROUND': 0.5, 'ROCK': 0.5,
+               'GHOST': 0.5, 'STEEL': 0, 'GRASS': 2, 'ELECTRIC': 0.5}
+fire_type = {'WATER': 0.5, 'GRASS': 2, 'FIRE': 0.5,
+             'ROCK': 0.5, 'BUG': 2, 'STEEL': 2, 'ICE': 2, 'DRAGON': 0.5}
+water_type = {'GROUND': 2, 'ROCK': 2, 'FIRE': 2,
+              'GRASS': 0.5, 'WATER': 0.5, 'DRAGON': 0.5}
 grass_type = {'FLYING': 0.5, 'POISON': 0.5, 'ROCK': 2, 'GROUND': 2, 'BUG': 0.5, 'STEEL': 0.5, 'FIRE': 0.5, 'WATER': 2,
               'GRASS': 0.5, 'DRAGON': 0.5}
-electric_type = {'FLYING': 2, 'GROUND': 0, 'WATER': 2, 'GRASS': 0.5, 'ELECTRIC': 0.5, 'DRAGON': 0.5}
-psychic_type = {'POISON': 2, 'FIGHTING': 2, 'STEEL': 0.5, 'PSYCHIC': 0.5, 'DARK': 0}
+electric_type = {'FLYING': 2, 'GROUND': 0, 'WATER': 2,
+                 'GRASS': 0.5, 'ELECTRIC': 0.5, 'DRAGON': 0.5}
+psychic_type = {'POISON': 2, 'FIGHTING': 2,
+                'STEEL': 0.5, 'PSYCHIC': 0.5, 'DARK': 0}
+ice_type = {'FLYING': 2, 'GROUND': 2, 'STEEL': 0.5, 'FIRE': 0.5,
+            'WATER': 0.5, 'GRASS': 2, 'ICE': 0.5, 'DRAGON': 2}
 
-type_map = {'NORMAL': normal_type, 'FIGHTING': fighting_type, 'FIRE': fire_type, 'WATER': water_type, 'GRASS': grass_type,
-                 'PSYCHIC': psychic_type, 'ELECTRIC': electric_type}
+type_map = {'NORMAL': normal_type, 'FIGHTING': fighting_type, 'POISON': poison_type, 'FIRE': fire_type,
+            'WATER': water_type, 'GRASS': grass_type, 'ELECTRIC': electric_type,
+            'PSYCHIC': psychic_type, 'ICE': ice_type}
 
 
 class Pokemon(object):
@@ -33,7 +41,7 @@ class Pokemon(object):
         out_str += "\n\t" + self.types[0]
         out_str += "\n\t" + self.types[1]
         return out_str
-    
+
     def get_name(self):
         return self.name
 
@@ -60,10 +68,10 @@ class Pokemon(object):
 
     def get_spd(self):
         return self.speed
-    
+
     def get_status(self):
         return self.status
-    
+
     def get_moves(self):
         return self.moveset
 
@@ -87,7 +95,7 @@ class Pokemon(object):
             if type in atk_type:
                 multiplier *= atk_type[type]
         return multiplier
-    
+
     def faster_than(self, other):
         return self.get_spd() >= other.get_spd()
 
@@ -100,11 +108,11 @@ class Pokemon(object):
         elif val < 0:
             self.hp = 0
         else:
-            self.hp = val
-    
+            self.hp = int(val)
+
     def lose_hp(self, val):
         self.set_hp(self.hp - val)
-    
+
     # Sleep status logic. Pokemon is asleep and unable to act for 1-3 turns, then wakes up and can act again
     def sleep(self):
         if self.status == 'SLEEP':
@@ -120,7 +128,7 @@ class Pokemon(object):
             return True
         else:
             return False
-    
+
     # Paralysis status logic. Pokemon is paralyzed, has 1 in 4 chance of not being able to use a move
     def paralysis(self):
         if self.status == 'PARALYZED':
@@ -131,21 +139,27 @@ class Pokemon(object):
             return False
         else:
             return False
-    
+
     # Poison status logic. Pokemon is poisoned, loses 1/16 of max HP
     def poison(self):
         if self.status == 'POISONED':
             print(f'{self.name} is poisoned! It lost HP!')
-            self.lose_hp(self.max_hp/16)
-            
-            
+            self.lose_hp(int(self.max_hp/16))
+
+    def has_fainted(self):
+        if self.hp == 0:
+            print(f'{self.name} has fainted!')
+            self.status = 'FAINTED'
+            return True
+        return False
+
 
 class Garchomp(Pokemon):
-    
+
     def __init__(self, moveset, lvl=100):
         super().__init__(moveset, lvl)
         self.name = 'Garchomp'
-        
+
         self.max_hp = self.calc_hp(108, lvl)
         self.hp = self.max_hp
         self.attack = self.calc_stat(130, lvl)
@@ -156,12 +170,13 @@ class Garchomp(Pokemon):
 
         self.types = ('DRAGON', 'GROUND')
 
+
 class Jynx(Pokemon):
-    
+
     def __init__(self, moveset, lvl=100):
         super().__init__(moveset, lvl)
         self.name = 'Jynx'
-        
+
         self.max_hp = self.calc_hp(65, lvl)
         self.hp = self.max_hp
         self.attack = self.calc_stat(50, lvl)
@@ -171,14 +186,14 @@ class Jynx(Pokemon):
         self.speed = self.calc_stat(95, lvl)
 
         self.types = ('ICE', 'PSYCHIC')
-        
+
 
 class Scrafty(Pokemon):
-    
+
     def __init__(self, moveset, lvl=100):
         super().__init__(moveset, lvl)
         self.name = 'Scrafty'
-        
+
         self.max_hp = self.calc_hp(65, lvl)
         self.hp = self.max_hp
         self.attack = self.calc_stat(90, lvl)
@@ -186,16 +201,16 @@ class Scrafty(Pokemon):
         self.sp_atk = self.calc_stat(45, lvl)
         self.sp_def = self.calc_stat(115, lvl)
         self.speed = self.calc_stat(58, lvl)
-        
+
         self.types = ('DARK', 'FIGHTING')
-        
+
 
 class Snorlax(Pokemon):
-    
+
     def __init__(self, moveset, lvl=100):
         super().__init__(moveset, lvl)
         self.name = 'Snorlax'
-        
+
         self.max_hp = self.calc_hp(160, lvl)
         self.hp = self.max_hp
         self.attack = self.calc_stat(110, lvl)
@@ -203,10 +218,10 @@ class Snorlax(Pokemon):
         self.sp_atk = self.calc_stat(65, lvl)
         self.sp_def = self.calc_stat(110, lvl)
         self.speed = self.calc_stat(30, lvl)
-        
+
         self.types = ('NORMAL')
-        
-        
+
+
 class Starmie(Pokemon):
 
     def __init__(self, moveset, lvl=100):
@@ -239,5 +254,6 @@ class Venusaur(Pokemon):
         self.speed = self.calc_stat(80, lvl)
 
         self.types = ('GRASS', 'POISON')
+
 
 print('Pokemon loaded!')
