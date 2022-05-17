@@ -50,6 +50,7 @@ class Pokemon(object):
         self.lvl = lvl
         self.status = 'OK'
         self.status_ctr = -1
+        self.incapacitated = False
         pass
 
     def __str__(self):
@@ -118,6 +119,9 @@ class Pokemon(object):
 
     def set_status(self, status):
         self.status = status
+
+    def is_incapacitated(self):
+        pass
 
     def set_hp(self, val):
         if val > self.max_hp:
