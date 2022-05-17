@@ -11,7 +11,7 @@ class Move(object):
         out_str = self.name
         out_str += '\n\t' + self.type
         out_str += '\n\t' + self.category
-        if type(self) != 'StatusMove':
+        if self.base_pwr != 0:
             out_str += '\n\t' + str(self.base_pwr)
         return out_str
 

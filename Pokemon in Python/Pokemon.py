@@ -1,29 +1,44 @@
 import math
 import random
-import Moves
 
-# Type = attacking type
-normal_type = {'ROCK': 0.5, 'STEEL': 0.5, 'GHOST': 0}
+# Type in name = attacking type
+# Types in dict = defending type and multiplier
+normal_type = {'ROCK': 0.5, 'GHOST': 0, 'STEEL': 0.5}
 fighting_type = {'NORMAL': 2, 'FLYING': 0.5, 'POISON': 0.5, 'ROCK': 2, 'BUG': 0.5,
                  'GHOST': 0, 'STEEL': 2, 'PSYCHIC': 0.5, 'ICE': 2, 'DARK': 2, 'FAIRY': 0.5}
+flying_type = {'FIGHTING': 2, 'ROCK': 0.5, 'BUG': 2,
+               'STEEL': 0.5, 'GRASS': 2, 'ELECTRIC': 0.5}
 poison_type = {'POISON': 0.5, 'GROUND': 0.5, 'ROCK': 0.5,
-               'GHOST': 0.5, 'STEEL': 0, 'GRASS': 2, 'ELECTRIC': 0.5}
+               'GHOST': 0.5, 'STEEL': 0, 'GRASS': 2, 'FAIRY': 2}
+ground_type = {'FLYING': 0, 'POISON': 2, 'ROCK': 2, 'BUG': 0.5,
+               'STEEL': 2, 'FIRE': 2, 'GRASS': 0.5, 'ELECTRIC': 2}
+rock_type = {'FIGHTING': 0.5, 'FLYING': 2, 'GROUND': 0.5,
+             'BUG': 2, 'STEEL': 0.5, 'FIRE': 2, 'ICE': 2}
+bug_type = {'FIGHTING': 0.5, 'FLYING': 0.5, 'POISON': 0.5, 'GHOST': 0.5,
+            'STEEL': 0.5, 'FIRE': 0.5, 'GRASS': 2, 'PSYCHIC': 2, 'DARK': 2, 'FAIRY': 0.5}
+ghost_type = {'NORMAL': 0, 'GHOST': 2, 'PSYCHIC': 2, 'DARK': 0.5}
+steel_type = {'ROCK': 2, 'STEEL': 0.5, 'FIRE': 0.5,
+              'WATER': 0.5, 'ELECTRIC': 0.5, 'ICE': 2, 'FAIRY': 2}
 fire_type = {'WATER': 0.5, 'GRASS': 2, 'FIRE': 0.5,
              'ROCK': 0.5, 'BUG': 2, 'STEEL': 2, 'ICE': 2, 'DRAGON': 0.5}
 water_type = {'GROUND': 2, 'ROCK': 2, 'FIRE': 2,
               'GRASS': 0.5, 'WATER': 0.5, 'DRAGON': 0.5}
-grass_type = {'FLYING': 0.5, 'POISON': 0.5, 'ROCK': 2, 'GROUND': 2, 'BUG': 0.5, 'STEEL': 0.5, 'FIRE': 0.5, 'WATER': 2,
-              'GRASS': 0.5, 'DRAGON': 0.5}
+grass_type = {'FLYING': 0.5, 'POISON': 0.5, 'ROCK': 2, 'GROUND': 2, 'BUG': 0.5,
+              'STEEL': 0.5, 'FIRE': 0.5, 'WATER': 2, 'GRASS': 0.5, 'DRAGON': 0.5}
 electric_type = {'FLYING': 2, 'GROUND': 0, 'WATER': 2,
                  'GRASS': 0.5, 'ELECTRIC': 0.5, 'DRAGON': 0.5}
 psychic_type = {'POISON': 2, 'FIGHTING': 2,
                 'STEEL': 0.5, 'PSYCHIC': 0.5, 'DARK': 0}
 ice_type = {'FLYING': 2, 'GROUND': 2, 'STEEL': 0.5, 'FIRE': 0.5,
             'WATER': 0.5, 'GRASS': 2, 'ICE': 0.5, 'DRAGON': 2}
+dragon_type = {'STEEL': 0.5, 'DRAGON': 2, 'FAIRY': 0}
+dark_type = {'FIGHTING': 0.5, 'GHOST': 2,
+             'PSYCHIC': 2, 'DARK': 0.5, 'FAIRY': 0.5}
+fairy_type = {'FIGHTING': 2, 'POISON': 0.5,
+              'STEEL': 0.5, 'FIRE': 0.5, 'DRAGON': 2, 'DARK': 2}
 
-type_map = {'NORMAL': normal_type, 'FIGHTING': fighting_type, 'POISON': poison_type, 'FIRE': fire_type,
-            'WATER': water_type, 'GRASS': grass_type, 'ELECTRIC': electric_type,
-            'PSYCHIC': psychic_type, 'ICE': ice_type}
+type_map = {'NORMAL': normal_type, 'FIGHTING': fighting_type, 'FLYING': flying_type, 'POISON': poison_type, 'GROUND': ground_type, 'ROCK': rock_type, 'BUG': bug_type, 'GHOST': ghost_type, 'STEEL': steel_type,
+            'FIRE': fire_type, 'WATER': water_type, 'GRASS': grass_type, 'ELECTRIC': electric_type, 'PSYCHIC': psychic_type, 'ICE': ice_type, 'DRAGON': dragon_type, 'DARK': dark_type, 'FAIRY': fairy_type}
 
 
 class Pokemon(object):

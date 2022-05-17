@@ -56,10 +56,14 @@ class Player(object):
     def select_move(self):
         self.move_num = -1
         pokemon = self.party[self.pkmn_num]
-        if not pokemon.sleep() and not pokemon.paralysis():
+
+        print()
+        sleep_stun = pokemon.sleep()
+        paralysis_stun = pokemon.paralysis()
+        if not sleep_stun and not paralysis_stun:
             moves = pokemon.get_moves()
             for i in range(len(moves)):
-                print(f'{i + 1}.\t{moves[i].__str__()}')
+                print(f'{i + 1}.\t{moves[i].__str__()}\n')
 
         menu_num = -1
         while menu_num < 1 or menu_num > len(moves):
@@ -68,7 +72,6 @@ class Player(object):
                 print('Invalid input. Try again.')
             else:
                 self.move_num = menu_num - 1
-        menu_num = -1
 
 
 def main_menu(player):
@@ -76,14 +79,14 @@ def main_menu(player):
     print('2.\tPOKEMON')
 
     menu_num = -1
-    while menu_num < 1 and menu_num > 2:
-        menu_num = input('Enter a number: ')
+    while menu_num < 1 or menu_num > 2:
+        menu_num = int(input('Enter a number: '))
         if menu_num == 1:
-            menu_num = -1
             player.select_move()
+            return
         elif menu_num == 2:
-            menu_num = -1
             player.select_pokemon()
+            return
         else:
             print('Invalid input. Try again.')
 
@@ -91,9 +94,10 @@ def main_menu(player):
 def game_loop(player1, player2):
     pkmn1 = player1.get_out_pokemon()
     pkmn2 = player2.get_out_pokemon()
-    print(pkmn1.get_name() + ' VS ' + pkmn2.get_name())
-    print('\n' + pkmn1.__str__())
-    print('\n' + pkmn2.__str__())
+    display_str = pkmn1.get_name() + ' VS ' + pkmn2.get_name()
+    display_str += '\n\n' + pkmn1.__str__()
+    display_str += '\n' + pkmn2.__str__()
+    print(display_str)
 
     print('\n\nPlayer 1\'s turn!')
     main_menu(player1)
