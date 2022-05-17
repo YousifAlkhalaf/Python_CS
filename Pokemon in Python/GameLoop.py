@@ -6,8 +6,7 @@ menu_num = -1
 
 class Player(object):
 
-    def __init__(self, p_num, party):
-        self.p_num = p_num
+    def __init__(self, party):
         self.party = party
         self.pkmn_num = -1
         self.move_num = -1
@@ -38,7 +37,7 @@ class Player(object):
         out_str = ''
         for i in range(len(party)):
             out_str = f"{i + 1}.\t{party[i].__str__()}\n"
-            print(out_str)
+            print(out_str + '\n')
 
         menu_num = -1
         while menu_num not in range(1, len(party)):
@@ -46,7 +45,7 @@ class Player(object):
             if menu_num > len(party) or menu_num < 1:
                 print('Invalid input. Try again.')
             elif party[menu_num-1].get_status() == 'FAINTED':
-                print(f'{party[menu_num].get_name()} cannot fight!')
+                print(f'{party[menu_num-1].get_name()} cannot fight!')
                 menu_num = -1
             else:
                 self.pkmn_num = menu_num-1
@@ -58,12 +57,13 @@ class Player(object):
         pokemon = self.party[self.pkmn_num]
 
         print()
-        sleep_stun = pokemon.sleep()
-        paralysis_stun = pokemon.paralysis()
-        if not sleep_stun and not paralysis_stun:
-            moves = pokemon.get_moves()
+        stopped_by_status = pokemon.paralysis() or pokemon.sleep()
+        moves = pokemon.get_moves()
+        if not stopped_by_status:
             for i in range(len(moves)):
                 print(f'{i + 1}.\t{moves[i].__str__()}\n')
+        else:
+            return
 
         menu_num = -1
         while menu_num < 1 or menu_num > len(moves):
@@ -72,6 +72,7 @@ class Player(object):
                 print('Invalid input. Try again.')
             else:
                 self.move_num = menu_num - 1
+        return
 
 
 def main_menu(player):
@@ -82,11 +83,9 @@ def main_menu(player):
     while menu_num < 1 or menu_num > 2:
         menu_num = int(input('Enter a number: '))
         if menu_num == 1:
-            player.select_move()
-            return
+            return 1
         elif menu_num == 2:
-            player.select_pokemon()
-            return
+            return 2
         else:
             print('Invalid input. Try again.')
 
@@ -100,9 +99,17 @@ def game_loop(player1, player2):
     print(display_str)
 
     print('\n\nPlayer 1\'s turn!')
-    main_menu(player1)
+    p1_opt = main_menu(player1)
+    if p1_opt == 1:
+        player1.select_move()
+    else:
+        player1.select_pokemon()
     print('\n\nPlayer 2\'s turn!')
-    main_menu(player2)
+    p2_opt = main_menu(player1)
+    if p2_opt == 1:
+        player2.select_move()
+    else:
+        player2.select_pokemon()
 
     if pkmn1.faster_than(pkmn2):
         move_run(player1, player2)
@@ -118,6 +125,7 @@ def game_loop(player1, player2):
         player1.select_pokemon()
     if pkmn2.has_fainted() and not player2.all_pokemon_fainted():
         player2.select_pokemon()
+    return
 
 
 def move_run(attacker, defender):
@@ -145,6 +153,7 @@ def move_run(attacker, defender):
         else:
             print(f'{attacking_pkmn.get_name()} missed!')
     attacker.set_move_num(-1)
+    return
 
 
 def win_conditions(player1, player2):
@@ -162,11 +171,11 @@ party1.append(Pokemon.Starmie(
     [Moves.Surf(), Moves.Psychic(), Moves.Recover(), Moves.ConfuseRay()]))
 party1.append(Pokemon.Venusaur(
     [Moves.EnergyBall(), Moves.SludgeBomb(), Moves.Rest(), Moves.PoisonPowder()]))
-player1 = Player(1, party1)
+player1 = Player(party1)
 party2 = []
 party2.append(Pokemon.Jynx(
     [Moves.IceBeam(), Moves.Psychic(), Moves.ShadowBall(), Moves.LovelyKiss()]))
-player2 = Player(2, party2)
+player2 = Player(party2)
 
 print('Player 1, select your Pokemon\n')
 player1.select_pokemon()
@@ -175,3 +184,4 @@ player2.select_pokemon()
 
 while not player1.all_pokemon_fainted() and not player2.all_pokemon_fainted():
     game_loop(player1, player2)
+win_conditions(player1, player2)

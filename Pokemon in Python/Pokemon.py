@@ -1,8 +1,10 @@
 import math
 import random
+import Moves
 
 # Type in name = attacking type
 # Types in dict = defending type and multiplier
+
 normal_type = {'ROCK': 0.5, 'GHOST': 0, 'STEEL': 0.5}
 fighting_type = {'NORMAL': 2, 'FLYING': 0.5, 'POISON': 0.5, 'ROCK': 2, 'BUG': 0.5,
                  'GHOST': 0, 'STEEL': 2, 'PSYCHIC': 0.5, 'ICE': 2, 'DARK': 2, 'FAIRY': 0.5}
@@ -168,6 +170,31 @@ class Pokemon(object):
             return True
         return False
 
+    # Confusion status logic. Pokemon is confused for 2-5 turns, 1/3 chance to hit itself and not move.
+    def confusion(self):
+        print('Yay!')
+        if self.status == 'CONFUSED': # Counts down confusion
+            if self.status_ctr == 0:
+                self.status = 'OK'
+                self.status_ctr = -1
+                print(f'{self.name} has snapped out of its confusion!')
+                return False
+            elif self.status_ctr == -1:
+                self.status_ctr == random.randint(2, 5)
+            print(f'{self.name} is confused!')
+
+            confuse_move = Moves.ConfusionMove() # Used to deal confusion damage and decide when to activate
+            if confuse_move.accuracy_check():
+                print('It hit itself in its confusion!')
+                self.lose_hp(confuse_move.calc_damage(self, self))
+                return True
+
+            self.status_ctr -= 1
+            return True
+        else:
+            return False
+
+
 
 class Garchomp(Pokemon):
 
@@ -271,4 +298,4 @@ class Venusaur(Pokemon):
         self.types = ('GRASS', 'POISON')
 
 
-print('Pokemon loaded!')
+#print('Pokemon loaded!')

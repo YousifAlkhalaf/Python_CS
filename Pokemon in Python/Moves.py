@@ -30,7 +30,7 @@ class Move(object):
     def get_base_pwr(self):
         return self.base_pwr
 
-    def calc_damage(self, attacker, defender, multiplier):
+    def calc_damage(self, attacker, defender, multiplier=1):
         rng_pwr = random.randint(85, 100) / 100
         lvl_num = (2 * attacker.get_lvl()) / 5 + 2
         if self.category == 'STATUS':
@@ -79,6 +79,14 @@ class StatusMove(Move):
         self.category = 'STATUS'
         self.base_pwr = 0
 
+# Used for confusion
+class ConfusionMove(PhysicalMove):
+    def __init__(self):
+        super().__init__()
+        self.accuracy = 33
+        self.base_pwr = 40
+        self.type = None
+
 
 class ConfuseRay(StatusMove):
 
@@ -89,6 +97,7 @@ class ConfuseRay(StatusMove):
 
     def foe_effect(self, target):
         target.set_status('CONFUSED')
+        print(f'{target.get_name()} is confused!')
 
 
 class EnergyBall(SpecialMove):
@@ -123,7 +132,7 @@ class LovelyKiss(StatusMove):
     def __init__(self):
         super().__init__()
         self.name = 'Lovely Kiss'
-        self.type = 'ICE'
+        self.type = 'NORMAL'
         self.accuracy = 75
 
     def foe_effect(self, target):
@@ -155,7 +164,7 @@ class Recover(StatusMove):
     def __init__(self):
         super().__init__()
         self.name = 'Recover'
-        self.type = 'Normal'
+        self.type = 'NORMAL'
 
     def self_effect(self, target):
         target.set_hp(target.get_max_hp()/2)
@@ -200,4 +209,4 @@ class Surf(SpecialMove):
         self.type = 'WATER'
 
 
-print('Moves loaded!')
+#print('Moves loaded!')
