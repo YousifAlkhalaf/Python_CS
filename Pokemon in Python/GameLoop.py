@@ -1,23 +1,28 @@
 import Moves
 import Pokemon
 
-menu_num = -1
-
-
 class Player(object):
 
-    def __init__(self, party):
+    def __init__(self, party, p_num):
         self.party = party
+        self.p_num = p_num
+        self.prev_pkmn_num = -1
         self.pkmn_num = -1
         self.move_num = -1
 
     def __str__(self):
-        return 'Player ' + self.p_num
+        return 'Player ' + str(self.p_num)
+
+    def has_switched(self):
+        return self.prev_pkmn_num == self.pkmn_num
+
+    def update_prev(self):
+        self.prev_pkmn_num = self.pkmn_num
 
     def get_party(self):
         return self.party
 
-    def get_out_pokemon(self):
+    def get_out_pokemon(self): # Pokemon currently in play
         return self.party[self.pkmn_num]
 
     def get_move_num(self):
@@ -32,7 +37,9 @@ class Player(object):
                 return False
         return True
 
-    def select_pokemon(self):
+    def select_pokemon(self, switch_penalty=True):
+
+        print(f'{self.__str__()}, select your Pokemon!\n')
         party = self.party
         out_str = ''
         for i in range(len(party)):
@@ -45,21 +52,24 @@ class Player(object):
             if menu_num > len(party) or menu_num < 1:
                 print('Invalid input. Try again.')
             elif party[menu_num-1].get_status() == 'FAINTED':
-                print(f'{party[menu_num-1].get_name()} cannot fight!')
+                print(f'{party[menu_num-1].get_name()} has fainted and cannot fight!')
                 menu_num = -1
             else:
                 self.pkmn_num = menu_num-1
+                if not switch_penalty:
+                    self.prev_pkmn_num = self.pkmn_num
                 menu_num = -1
                 return
 
     def select_move(self):
+
+        print(f'{self.__str__()}, select a move!')
         self.move_num = -1
         pokemon = self.party[self.pkmn_num]
 
         print()
-        stopped_by_status = pokemon.paralysis() or pokemon.sleep()
         moves = pokemon.get_moves()
-        if not stopped_by_status:
+        if not pokemon.is_immobilized():
             for i in range(len(moves)):
                 print(f'{i + 1}.\t{moves[i].__str__()}\n')
         else:
@@ -74,73 +84,41 @@ class Player(object):
                 self.move_num = menu_num - 1
         return
 
+    def main_menu(self):
+        print(f'\n{self.__str__()}\'s turn!')
+        print('1.\tFIGHT')
+        print('2.\tPOKEMON')
 
-def main_menu(player):
-    print('1.\tFIGHT')
-    print('2.\tPOKEMON')
-
-    menu_num = -1
-    while menu_num < 1 or menu_num > 2:
-        menu_num = int(input('Enter a number: '))
-        if menu_num == 1:
-            return 1
-        elif menu_num == 2:
-            return 2
-        else:
-            print('Invalid input. Try again.')
-
-
-def game_loop(player1, player2):
-    pkmn1 = player1.get_out_pokemon()
-    pkmn2 = player2.get_out_pokemon()
-    display_str = pkmn1.get_name() + ' VS ' + pkmn2.get_name()
-    display_str += '\n\n' + pkmn1.__str__()
-    display_str += '\n' + pkmn2.__str__()
-    print(display_str)
-
-    print('\n\nPlayer 1\'s turn!')
-    p1_opt = main_menu(player1)
-    if p1_opt == 1:
-        player1.select_move()
-    else:
-        player1.select_pokemon()
-    print('\n\nPlayer 2\'s turn!')
-    p2_opt = main_menu(player1)
-    if p2_opt == 1:
-        player2.select_move()
-    else:
-        player2.select_pokemon()
-
-    if pkmn1.faster_than(pkmn2):
-        move_run(player1, player2)
-        move_run(player2, player1)
-    else:
-        move_run(player2, player1)
-        move_run(player1, player2)
-
-    pkmn1.poison()
-    pkmn2.poison()
-
-    if pkmn1.has_fainted() and not player1.all_pokemon_fainted():
-        player1.select_pokemon()
-    if pkmn2.has_fainted() and not player2.all_pokemon_fainted():
-        player2.select_pokemon()
-    return
+        menu_num = -1
+        while menu_num < 1 or menu_num > 2:
+            menu_num = int(input('Enter a number: '))
+            if menu_num == 1:
+                self.select_move()
+            elif menu_num == 2:
+                self.select_pokemon()
+                if not self.has_switched():
+                    self.select_move()
+            else:
+                print('Invalid input. Try again.')
 
 
-def move_run(attacker, defender):
+def move_run(attacker, defender): # Routine for attacker using a move on defender
     attacking_pkmn = attacker.get_out_pokemon()
     defending_pkmn = defender.get_out_pokemon()
-    if not attacking_pkmn.paralysis() and not attacking_pkmn.sleep():
+    attacking_pkmn.run_stun_statuses()
+
+    if not attacking_pkmn.is_immobilized() and not attacker.has_switched():
         move = attacking_pkmn.get_moves()[attacker.get_move_num()]
         multiplier = defending_pkmn.calc_type_effectiveness(move.get_type())
         print(f'{attacking_pkmn.get_name()} uses {move.get_name()}!')
-        if multiplier > 1:
-            print('It\'s super effective!')
-        elif multiplier == 0:
+        if multiplier == 0:
             print('It had no effect!')
-        elif multiplier < 1:
-            print('It\'s not very effective!')
+        elif not isinstance(move, Moves.StatusMove):
+            if multiplier > 1:
+                print('It\'s super effective!')
+            elif multiplier < 1:
+                print('It\'s not very effective.')
+
 
         if move.accuracy_check():
             damage = move.calc_damage(
@@ -153,10 +131,43 @@ def move_run(attacker, defender):
         else:
             print(f'{attacking_pkmn.get_name()} missed!')
     attacker.set_move_num(-1)
-    return
 
 
-def win_conditions(player1, player2):
+# Loop for running the game
+def game_loop(player1, player2):
+    pkmn1 = player1.get_out_pokemon()
+    pkmn2 = player2.get_out_pokemon()
+
+    display_str = pkmn1.get_name() + ' VS ' + pkmn2.get_name()
+    display_str += '\n\n' + pkmn1.__str__()
+    display_str += '\n' + pkmn2.__str__()
+    print(display_str)
+
+    player1.main_menu()
+    player2.main_menu()
+
+    # Moves execute in order based on Pokemon speed
+    if pkmn1.faster_than(pkmn2):
+        move_run(player1, player2)
+        move_run(player2, player1)
+    else:
+        move_run(player2, player1)
+        move_run(player1, player2)
+
+    # Poison condition runs
+    pkmn1.poison()
+    pkmn2.poison()
+
+    if pkmn1.has_fainted() and not player1.all_pokemon_fainted():
+        player1.select_pokemon(False)
+    if pkmn2.has_fainted() and not player2.all_pokemon_fainted():
+        player2.select_pokemon(False)
+
+    # Updates players so switch penalties are no longer in effect
+    player1.update_prev()
+    player2.update_prev()
+
+def win_conditions(player1, player2): # Who wins
     if player1.all_pokemon_fainted():
         print('Player 2 wins!')
     else:
@@ -171,16 +182,15 @@ party1.append(Pokemon.Starmie(
     [Moves.Surf(), Moves.Psychic(), Moves.Recover(), Moves.ConfuseRay()]))
 party1.append(Pokemon.Venusaur(
     [Moves.EnergyBall(), Moves.SludgeBomb(), Moves.Rest(), Moves.PoisonPowder()]))
-player1 = Player(party1)
+player1 = Player(party1, 1)
+
 party2 = []
 party2.append(Pokemon.Jynx(
     [Moves.IceBeam(), Moves.Psychic(), Moves.ShadowBall(), Moves.LovelyKiss()]))
-player2 = Player(party2)
+player2 = Player(party2, 2)
 
-print('Player 1, select your Pokemon\n')
-player1.select_pokemon()
-print('Player 2, select your Pokemon\n')
-player2.select_pokemon()
+player1.select_pokemon(False)
+player2.select_pokemon(False)
 
 while not player1.all_pokemon_fainted() and not player2.all_pokemon_fainted():
     game_loop(player1, player2)

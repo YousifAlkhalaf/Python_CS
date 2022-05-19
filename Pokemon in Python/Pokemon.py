@@ -50,7 +50,7 @@ class Pokemon(object):
         self.lvl = lvl
         self.status = 'OK'
         self.status_ctr = -1
-        self.incapacitated = False
+        self.immobilized = False
         pass
 
     def __str__(self):
@@ -93,6 +93,9 @@ class Pokemon(object):
     def get_moves(self):
         return self.moveset
 
+    def is_immobilized(self):
+        return self.immobilized
+
     # Calculates HP stat of Pokemon
     def calc_hp(self, base_stat, level):
         hp = ((2 * base_stat) * level) / 100 + level + 10
@@ -120,8 +123,8 @@ class Pokemon(object):
     def set_status(self, status):
         self.status = status
 
-    def is_incapacitated(self):
-        pass
+    def run_stun_statuses(self):
+        self.immobilized = self.sleep() or self.paralysis() or self.confusion()
 
     def set_hp(self, val):
         if val > self.max_hp:
@@ -176,7 +179,6 @@ class Pokemon(object):
 
     # Confusion status logic. Pokemon is confused for 2-5 turns, 1/3 chance to hit itself and not move.
     def confusion(self):
-        print('Yay!')
         if self.status == 'CONFUSED': # Counts down confusion
             if self.status_ctr == 0:
                 self.status = 'OK'
@@ -194,7 +196,7 @@ class Pokemon(object):
                 return True
 
             self.status_ctr -= 1
-            return True
+            return False
         else:
             return False
 
@@ -302,4 +304,4 @@ class Venusaur(Pokemon):
         self.types = ('GRASS', 'POISON')
 
 
-#print('Pokemon loaded!')
+print('Pokemon loaded!')

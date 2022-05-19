@@ -83,9 +83,8 @@ class StatusMove(Move):
 class ConfusionMove(PhysicalMove):
     def __init__(self):
         super().__init__()
-        self.accuracy = 33
         self.base_pwr = 40
-        self.type = None
+        self.accuracy = 33
 
 
 class ConfuseRay(StatusMove):
@@ -97,7 +96,7 @@ class ConfuseRay(StatusMove):
 
     def foe_effect(self, target):
         target.set_status('CONFUSED')
-        print(f'{target.get_name()} is confused!')
+        print(f'{target.get_name()} is now confused!')
 
 
 class EnergyBall(SpecialMove):
@@ -137,6 +136,7 @@ class LovelyKiss(StatusMove):
 
     def foe_effect(self, target):
         target.set_status('SLEEP')
+        print(f'{target.get_name()} fell asleep!')
 
 
 class PoisonPowder(StatusMove):
@@ -148,6 +148,7 @@ class PoisonPowder(StatusMove):
 
     def foe_effect(self, target):
         target.set_status('POISONED')
+        print(f'{target.get_name()} is now poisoned!')
 
 
 class Psychic(SpecialMove):
@@ -167,6 +168,7 @@ class Recover(StatusMove):
         self.type = 'NORMAL'
 
     def self_effect(self, target):
+        print(f'{target.get_name()} recovered HP!')
         target.set_hp(target.get_max_hp()/2)
 
 
@@ -180,6 +182,7 @@ class Rest(StatusMove):
     def self_effect(self, target):
         target.set_hp(target.get_max_hp())
         target.set_status('SLEEP')
+        print(f'{target.get_name()} went to sleep and regained all its HP!')
 
 
 class ShadowBall(SpecialMove):
@@ -209,4 +212,4 @@ class Surf(SpecialMove):
         self.type = 'WATER'
 
 
-#print('Moves loaded!')
+print('Moves loaded!')
