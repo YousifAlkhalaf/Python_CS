@@ -14,9 +14,9 @@ class Player(object):
         return 'Player ' + str(self.p_num)
 
     def has_switched(self):
-        return self.prev_pkmn_num == self.pkmn_num
+        return self.prev_pkmn_num != self.pkmn_num
 
-    def update_prev(self):
+    def update(self):
         self.prev_pkmn_num = self.pkmn_num
 
     def get_party(self):
@@ -31,6 +31,10 @@ class Player(object):
     def set_move_num(self, num):
         self.move_num = -1
 
+    def pkmn_fainted(self):
+        if self.party[self.pkmn_num].has_fainted() and not self.all_pokemon_fainted():
+            self.select_pokemon(False)
+
     def all_pokemon_fainted(self):
         for pokemon in self.party:
             if pokemon.get_status() != 'FAINTED':
@@ -41,9 +45,8 @@ class Player(object):
 
         print(f'{self.__str__()}, select your Pokemon!\n')
         party = self.party
-        out_str = ''
         for i in range(len(party)):
-            out_str = f"{i + 1}.\t{party[i].__str__()}\n"
+            out_str = f"{i + 1}. {party[i].__str__()}\n"
             print(out_str + '\n')
 
         menu_num = -1
@@ -58,7 +61,6 @@ class Player(object):
                 self.pkmn_num = menu_num-1
                 if not switch_penalty:
                     self.prev_pkmn_num = self.pkmn_num
-                menu_num = -1
                 return
 
     def select_move(self):
@@ -111,6 +113,7 @@ def move_run(attacker, defender): # Routine for attacker using a move on defende
         move = attacking_pkmn.get_moves()[attacker.get_move_num()]
         multiplier = defending_pkmn.calc_type_effectiveness(move.get_type())
         print(f'{attacking_pkmn.get_name()} uses {move.get_name()}!')
+
         if multiplier == 0:
             print('It had no effect!')
         elif not isinstance(move, Moves.StatusMove):
@@ -149,23 +152,25 @@ def game_loop(player1, player2):
     # Moves execute in order based on Pokemon speed
     if pkmn1.faster_than(pkmn2):
         move_run(player1, player2)
+        player2.pkmn_fainted()
         move_run(player2, player1)
+        player1.pkmn_fainted()
     else:
         move_run(player2, player1)
+        player1.pkmn_fainted()
         move_run(player1, player2)
+        player2.pkmn_fainted()
 
     # Poison condition runs
     pkmn1.poison()
     pkmn2.poison()
 
-    if pkmn1.has_fainted() and not player1.all_pokemon_fainted():
-        player1.select_pokemon(False)
-    if pkmn2.has_fainted() and not player2.all_pokemon_fainted():
-        player2.select_pokemon(False)
+    player1.pkmn_fainted()
+    player2.pkmn_fainted()
 
     # Updates players so switch penalties are no longer in effect
-    player1.update_prev()
-    player2.update_prev()
+    player1.update()
+    player2.update()
 
 def win_conditions(player1, player2): # Who wins
     if player1.all_pokemon_fainted():

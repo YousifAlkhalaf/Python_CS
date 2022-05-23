@@ -54,7 +54,7 @@ class Pokemon(object):
         pass
 
     def __str__(self):
-        out_str = self.name + f'\t{self.hp}/{self.max_hp}'
+        out_str = self.name + f'{self.hp}/{self.max_hp}'.rjust(20)
         out_str += "\n\t" + self.status
         out_str += "\n\t" + self.types[0]
         out_str += "\n\t" + self.types[1]
@@ -117,15 +117,19 @@ class Pokemon(object):
                 multiplier *= atk_type[type]
         return multiplier
 
+    # Compares speed
     def faster_than(self, other):
         return self.get_spd() >= other.get_spd()
 
+    # Assigns a status condition
     def set_status(self, status):
         self.status = status
 
+    # Figures out if a Pokemon is immobilized by running immobilizing statuses.
     def run_stun_statuses(self):
         self.immobilized = self.sleep() or self.paralysis() or self.confusion()
 
+    # HP value is set to given value.
     def set_hp(self, val):
         if val > self.max_hp:
             self.hp = self.max_hp
@@ -137,26 +141,29 @@ class Pokemon(object):
     def lose_hp(self, val):
         self.set_hp(self.hp - val)
 
+    def gain_hp(self, val):
+        self.set_hp(self.hp + val)
+
     # Sleep status logic. Pokemon is asleep and unable to act for 1-3 turns, then wakes up and can act again
     def sleep(self):
         if self.status == 'SLEEP':
-            if self.status_ctr == 0:
+            if self.status_ctr == 0: # Sleep ends
                 self.status = 'OK'
                 self.status_ctr = -1
                 print(f'{self.name} has woken up!')
                 return False
-            elif self.status_ctr == -1:
+            elif self.status_ctr == -1: # Sleep begins
                 self.status_ctr == random.randint(1, 3)
             print(f'{self.name} is asleep!')
             self.status_ctr -= 1
             return True
         else:
-            return False
+            return False # Pokemon is not asleep
 
     # Paralysis status logic. Pokemon is paralyzed, has 1 in 4 chance of not being able to use a move
     def paralysis(self):
         if self.status == 'PARALYZED':
-            randnum = random.randint(1, 4)
+            randnum = random.randint(1, 4) # 25% chance to be paralyzed
             if randnum == 1:
                 print('{self.name} is paralyzed! It can\'t move!')
                 return True
@@ -170,6 +177,7 @@ class Pokemon(object):
             print(f'{self.name} is poisoned! It lost HP!')
             self.lose_hp(int(self.max_hp/16))
 
+    # If the Pokemon has fainted
     def has_fainted(self):
         if self.hp == 0:
             print(f'{self.name} has fainted!')
@@ -180,25 +188,26 @@ class Pokemon(object):
     # Confusion status logic. Pokemon is confused for 2-5 turns, 1/3 chance to hit itself and not move.
     def confusion(self):
         if self.status == 'CONFUSED': # Counts down confusion
-            if self.status_ctr == 0:
+            if self.status_ctr == 0: # Confusion ends
                 self.status = 'OK'
                 self.status_ctr = -1
                 print(f'{self.name} has snapped out of its confusion!')
                 return False
-            elif self.status_ctr == -1:
+            elif self.status_ctr == -1: # Confusion begins
                 self.status_ctr == random.randint(2, 5)
             print(f'{self.name} is confused!')
 
+            # Whether or not confusion damage will be dealt.
             confuse_move = Moves.ConfusionMove() # Used to deal confusion damage and decide when to activate
             if confuse_move.accuracy_check():
                 print('It hit itself in its confusion!')
-                self.lose_hp(confuse_move.calc_damage(self, self))
+                self.lose_hp(confuse_move.calc_damage(self, self)) # Hits itself.
                 return True
 
             self.status_ctr -= 1
             return False
         else:
-            return False
+            return False # Not confused
 
 
 
