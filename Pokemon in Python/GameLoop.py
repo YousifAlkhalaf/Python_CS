@@ -1,6 +1,7 @@
 import Moves
 import Pokemon
 
+
 class Player(object):
 
     def __init__(self, party, p_num):
@@ -22,7 +23,7 @@ class Player(object):
     def get_party(self):
         return self.party
 
-    def get_out_pokemon(self): # Pokemon currently in play
+    def get_out_pokemon(self):  # Pokemon currently in play
         return self.party[self.pkmn_num]
 
     def get_move_num(self):
@@ -41,6 +42,9 @@ class Player(object):
                 return False
         return True
 
+    # Player selects from Pokemon in party, can only select non-fainted Pokemon
+    # If the Pokemon selected is already out, or if the switch penalty is turned off,
+    # the Pokemon can act in the same turn. Otherwise, it can't act until the next turn.
     def select_pokemon(self, switch_penalty=True):
 
         print(f'{self.__str__()}, select your Pokemon!\n')
@@ -51,11 +55,12 @@ class Player(object):
 
         menu_num = -1
         while menu_num not in range(1, len(party)):
-            menu_num = int(input('Enter a number: '))
+            menu_num = enter_number()
             if menu_num > len(party) or menu_num < 1:
                 print('Invalid input. Try again.')
             elif party[menu_num-1].get_status() == 'FAINTED':
-                print(f'{party[menu_num-1].get_name()} has fainted and cannot fight!')
+                print(
+                    f'{party[menu_num-1].get_name()} has fainted and cannot fight!')
                 menu_num = -1
             else:
                 self.pkmn_num = menu_num-1
@@ -63,6 +68,7 @@ class Player(object):
                     self.prev_pkmn_num = self.pkmn_num
                 return
 
+    # Select 1 of up to 4 moves of Pokemon currently in play.
     def select_move(self):
 
         print(f'{self.__str__()}, select a move!')
@@ -79,12 +85,11 @@ class Player(object):
 
         menu_num = -1
         while menu_num < 1 or menu_num > len(moves):
-            menu_num = int(input('Enter a number: '))
+            menu_num = enter_number()
             if menu_num > len(moves) or menu_num < 1:
                 print('Invalid input. Try again.')
             else:
                 self.move_num = menu_num - 1
-        return
 
     def main_menu(self):
         print(f'\n{self.__str__()}\'s turn!')
@@ -93,7 +98,7 @@ class Player(object):
 
         menu_num = -1
         while menu_num < 1 or menu_num > 2:
-            menu_num = int(input('Enter a number: '))
+            menu_num = enter_number()
             if menu_num == 1:
                 self.select_move()
             elif menu_num == 2:
@@ -104,7 +109,15 @@ class Player(object):
                 print('Invalid input. Try again.')
 
 
-def move_run(attacker, defender): # Routine for attacker using a move on defender
+def enter_number():
+    try:
+        menu_num = int(input('Enter a number: '))
+    except ValueError:
+        menu_num = -1
+    return menu_num
+
+
+def move_run(attacker, defender):  # Routine for attacker using a move on defender
     attacking_pkmn = attacker.get_out_pokemon()
     defending_pkmn = defender.get_out_pokemon()
     attacking_pkmn.run_stun_statuses()
@@ -121,7 +134,6 @@ def move_run(attacker, defender): # Routine for attacker using a move on defende
                 print('It\'s super effective!')
             elif multiplier < 1:
                 print('It\'s not very effective.')
-
 
         if move.accuracy_check():
             damage = move.calc_damage(
@@ -172,15 +184,13 @@ def game_loop(player1, player2):
     player1.update()
     player2.update()
 
-def win_conditions(player1, player2): # Who wins
+
+def win_conditions(player1, player2):  # Who wins
     if player1.all_pokemon_fainted():
         print('Player 2 wins!')
     else:
         print('Player 1 wins!')
 
-
-p1_pkmn_num = 0
-p2_pkmn_num = 0
 
 party1 = []
 party1.append(Pokemon.Starmie(

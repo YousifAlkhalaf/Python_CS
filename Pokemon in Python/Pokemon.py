@@ -147,23 +147,23 @@ class Pokemon(object):
     # Sleep status logic. Pokemon is asleep and unable to act for 1-3 turns, then wakes up and can act again
     def sleep(self):
         if self.status == 'SLEEP':
-            if self.status_ctr == 0: # Sleep ends
+            if self.status_ctr == 0:  # Sleep ends
                 self.status = 'OK'
                 self.status_ctr = -1
                 print(f'{self.name} has woken up!')
                 return False
-            elif self.status_ctr == -1: # Sleep begins
+            elif self.status_ctr == -1:  # Sleep begins
                 self.status_ctr == random.randint(1, 3)
             print(f'{self.name} is asleep!')
             self.status_ctr -= 1
             return True
         else:
-            return False # Pokemon is not asleep
+            return False  # Pokemon is not asleep
 
     # Paralysis status logic. Pokemon is paralyzed, has 1 in 4 chance of not being able to use a move
     def paralysis(self):
         if self.status == 'PARALYZED':
-            randnum = random.randint(1, 4) # 25% chance to be paralyzed
+            randnum = random.randint(1, 4)  # 25% chance to be paralyzed
             if randnum == 1:
                 print('{self.name} is paralyzed! It can\'t move!')
                 return True
@@ -187,28 +187,29 @@ class Pokemon(object):
 
     # Confusion status logic. Pokemon is confused for 2-5 turns, 1/3 chance to hit itself and not move.
     def confusion(self):
-        if self.status == 'CONFUSED': # Counts down confusion
-            if self.status_ctr == 0: # Confusion ends
+        if self.status == 'CONFUSED':  # Counts down confusion
+            if self.status_ctr == 0:  # Confusion ends
                 self.status = 'OK'
                 self.status_ctr = -1
                 print(f'{self.name} has snapped out of its confusion!')
                 return False
-            elif self.status_ctr == -1: # Confusion begins
+            elif self.status_ctr == -1:  # Confusion begins
                 self.status_ctr == random.randint(2, 5)
             print(f'{self.name} is confused!')
 
             # Whether or not confusion damage will be dealt.
-            confuse_move = Moves.ConfusionMove() # Used to deal confusion damage and decide when to activate
+            # Used to deal confusion damage and decide when to activate
+            confuse_move = Moves.ConfusionMove()
             if confuse_move.accuracy_check():
                 print('It hit itself in its confusion!')
-                self.lose_hp(confuse_move.calc_damage(self, self)) # Hits itself.
+                # Hits itself.
+                self.lose_hp(confuse_move.calc_damage(self, self))
                 return True
 
             self.status_ctr -= 1
             return False
         else:
-            return False # Not confused
-
+            return False  # Not confused
 
 
 class Garchomp(Pokemon):
@@ -276,7 +277,7 @@ class Snorlax(Pokemon):
         self.sp_def = self.calc_stat(110, lvl)
         self.speed = self.calc_stat(30, lvl)
 
-        self.types = ('NORMAL')
+        self.types = ('NORMAL',)
 
 
 class Starmie(Pokemon):
