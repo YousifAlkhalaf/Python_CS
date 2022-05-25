@@ -1,10 +1,12 @@
 import math
 import random
+
 import Moves
 
 # Type in name = attacking type
 # Types in dict = defending type and multiplier
 
+null_type = dict()
 normal_type = {'ROCK': 0.5, 'GHOST': 0, 'STEEL': 0.5}
 fighting_type = {'NORMAL': 2, 'FLYING': 0.5, 'POISON': 0.5, 'ROCK': 2, 'BUG': 0.5,
                  'GHOST': 0, 'STEEL': 2, 'PSYCHIC': 0.5, 'ICE': 2, 'DARK': 2, 'FAIRY': 0.5}
@@ -39,8 +41,10 @@ dark_type = {'FIGHTING': 0.5, 'GHOST': 2,
 fairy_type = {'FIGHTING': 2, 'POISON': 0.5,
               'STEEL': 0.5, 'FIRE': 0.5, 'DRAGON': 2, 'DARK': 2}
 
-type_map = {'NORMAL': normal_type, 'FIGHTING': fighting_type, 'FLYING': flying_type, 'POISON': poison_type, 'GROUND': ground_type, 'ROCK': rock_type, 'BUG': bug_type, 'GHOST': ghost_type, 'STEEL': steel_type,
-            'FIRE': fire_type, 'WATER': water_type, 'GRASS': grass_type, 'ELECTRIC': electric_type, 'PSYCHIC': psychic_type, 'ICE': ice_type, 'DRAGON': dragon_type, 'DARK': dark_type, 'FAIRY': fairy_type}
+type_map = {'NULL': null_type,'NORMAL': normal_type, 'FIGHTING': fighting_type, 'FLYING': flying_type, 'POISON': poison_type,
+            'GROUND': ground_type, 'ROCK': rock_type, 'BUG': bug_type, 'GHOST': ghost_type, 'STEEL': steel_type,
+            'FIRE': fire_type, 'WATER': water_type, 'GRASS': grass_type, 'ELECTRIC': electric_type,
+            'PSYCHIC': psychic_type, 'ICE': ice_type, 'DRAGON': dragon_type, 'DARK': dark_type, 'FAIRY': fairy_type}
 
 
 class Pokemon(object):
@@ -56,8 +60,8 @@ class Pokemon(object):
     def __str__(self):
         out_str = self.name + f'{self.hp}/{self.max_hp}'.rjust(20)
         out_str += "\n\t" + self.status
-        out_str += "\n\t" + self.types[0]
-        out_str += "\n\t" + self.types[1]
+        for type in self.types:
+            out_str += "\n\t" + type
         return out_str
 
     def get_name(self):
@@ -92,6 +96,9 @@ class Pokemon(object):
 
     def get_moves(self):
         return self.moveset
+
+    def get_types(self):
+        return self.types
 
     def is_immobilized(self):
         return self.immobilized
@@ -135,6 +142,7 @@ class Pokemon(object):
             self.hp = self.max_hp
         elif val < 0:
             self.hp = 0
+            self.has_fainted()
         else:
             self.hp = int(val)
 
@@ -165,7 +173,7 @@ class Pokemon(object):
         if self.status == 'PARALYZED':
             randnum = random.randint(1, 4)  # 25% chance to be paralyzed
             if randnum == 1:
-                print('{self.name} is paralyzed! It can\'t move!')
+                print(f'{self.name} is paralyzed! It can\'t move!')
                 return True
             return False
         else:
@@ -175,7 +183,13 @@ class Pokemon(object):
     def poison(self):
         if self.status == 'POISONED':
             print(f'{self.name} is poisoned! It lost HP!')
-            self.lose_hp(int(self.max_hp/16))
+            self.lose_hp(int(self.max_hp / 16))
+
+    # Burn status. Basically the same as poison.
+    def burn(self):
+        if self.status == 'BURNED':
+            print(f'{self.name} is burned! It lost HP!')
+            self.lose_hp(int(self.max_hp / 16))
 
     # If the Pokemon has fainted
     def has_fainted(self):

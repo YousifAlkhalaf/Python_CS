@@ -58,14 +58,15 @@ class Player(object):
             menu_num = enter_number()
             if menu_num > len(party) or menu_num < 1:
                 print('Invalid input. Try again.')
-            elif party[menu_num-1].get_status() == 'FAINTED':
+            elif party[menu_num - 1].get_status() == 'FAINTED':
                 print(
-                    f'{party[menu_num-1].get_name()} has fainted and cannot fight!')
+                    f'{party[menu_num - 1].get_name()} has fainted and cannot fight!')
                 menu_num = -1
             else:
-                self.pkmn_num = menu_num-1
+                self.pkmn_num = menu_num - 1
                 if not switch_penalty:
                     self.prev_pkmn_num = self.pkmn_num
+                print(f'Go, {self.party[self.pkmn_num].get_name()}! I choose you! ')
                 return
 
     # Select 1 of up to 4 moves of Pokemon currently in play.
@@ -77,11 +78,8 @@ class Player(object):
 
         print()
         moves = pokemon.get_moves()
-        if not pokemon.is_immobilized():
-            for i in range(len(moves)):
-                print(f'{i + 1}.\t{moves[i].__str__()}\n')
-        else:
-            return
+        for i in range(len(moves)):
+            print(f'{i + 1}.\t{moves[i].__str__()}\n')
 
         menu_num = -1
         while menu_num < 1 or menu_num > len(moves):
@@ -138,6 +136,13 @@ def move_run(attacker, defender):  # Routine for attacker using a move on defend
         if move.accuracy_check():
             damage = move.calc_damage(
                 attacking_pkmn, defending_pkmn, multiplier)
+
+            # Determines if attacking Pokemon and move share a type
+            # Provides same-type attack bonus (STAB) of 1.5x
+            if move.get_type() in attacking_pkmn.get_types():
+                damage *= 1.5
+                damage = int(damage)
+
             defending_pkmn.lose_hp(damage)
 
             if multiplier != 0:
@@ -175,7 +180,9 @@ def game_loop(player1, player2):
 
     # Poison condition runs
     pkmn1.poison()
+    pkmn1.burn()
     pkmn2.poison()
+    pkmn2.burn()
 
     player1.pkmn_fainted()
     player2.pkmn_fainted()
@@ -193,15 +200,15 @@ def win_conditions(player1, player2):  # Who wins
 
 
 party1 = []
-party1.append(Pokemon.Starmie(
-    [Moves.Surf(), Moves.Psychic(), Moves.Recover(), Moves.ConfuseRay()]))
-party1.append(Pokemon.Venusaur(
-    [Moves.EnergyBall(), Moves.SludgeBomb(), Moves.Rest(), Moves.PoisonPowder()]))
+party1.append(Pokemon.Starmie([Moves.Surf(), Moves.Psychic(), Moves.Recover(), Moves.ConfuseRay()]))
+party1.append(Pokemon.Venusaur([Moves.EnergyBall(), Moves.SludgeBomb(), Moves.Rest(), Moves.PoisonPowder()]))
+party1.append(Pokemon.Garchomp([Moves.Earthquake(), Moves.DragonClaw(), Moves.StoneEdge(), Moves.ShadowClaw()]))
 player1 = Player(party1, 1)
 
 party2 = []
-party2.append(Pokemon.Jynx(
-    [Moves.IceBeam(), Moves.Psychic(), Moves.ShadowBall(), Moves.LovelyKiss()]))
+party2.append(Pokemon.Jynx([Moves.IceBeam(), Moves.Psychic(), Moves.ShadowBall(), Moves.LovelyKiss()]))
+party2.append(Pokemon.Snorlax([Moves.BodySlam(), Moves.IronHead(), Moves.WildCharge(), Moves.Rest()]))
+party2.append(Pokemon.Scrafty([Moves.Crunch(), Moves.HighJumpKick(), Moves.FirePunch(), Moves.PoisonJab()]))
 player2 = Player(party2, 2)
 
 player1.select_pokemon(False)
